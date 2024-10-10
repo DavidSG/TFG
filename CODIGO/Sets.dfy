@@ -14,7 +14,7 @@ ghost predicate isCover<T>(universe:set<T>, sets:set<set<T>>)
 // Hitting Set
 ghost predicate HittingSet<T>(universe:set<T>, sets:set<set<T>>, cardinality:int)
   requires forall s | s in sets :: s <= universe // los sets son subsets del universo
-  requires forall s1 | s1 in sets :: !(exists s2 | s2 in sets - {s1} :: s1 == s2) // no hay dos sets iguales en S
+  //requires forall s1 | s1 in sets :: !(exists s2 | s2 in sets - {s1} :: s1 == s2) // no hay dos sets iguales en S
 {
   exists s:set<T> :: hitsSets(sets, s) && |s| <= cardinality && s <= universe
 }
@@ -29,36 +29,87 @@ function SetCover_to_HittingSet<T>(U: set<T>, S: set<set<T>>, k: int) : (r:(set<
   requires forall s | s in S :: s <= U // los sets son subsets del universo
   requires isCover(U, S) // existe un subconjunto de sets tal que su union es igual al universo
   ensures forall s | s in r.1 :: s <= r.0 // los sets son subsets del universo
-  ensures forall s1 | s1 in r.1 :: !(exists s2 :: s2 in r.1 && s2 != s1 && s1 == s2) // no hay dos sets iguales en S
+  //ensures forall s1 | s1 in r.1 :: !(exists s2 :: s2 in r.1 && s2 != s1 && s1 == s2) // no hay dos sets iguales en S
 {
   var newS: set<set<set<T>>> := (set u | u in U :: (set s | s in S && u in s));
-  (S, newS, k)
+  (S-{{}}, newS, k)
 }
 
 
+lemma {:axiom} SetCover_HittingSet1<T>(U:set<T>, S: set<set<T>>, k:int)
+  requires forall s | s in S :: s <= U
+  requires isCover(U, S)
+  ensures var (HU,HS,Hk) := SetCover_to_HittingSet(U,S,k);
+              SetCover(U,S,k) ==> HittingSet(HU,HS,Hk)
+  
+ lemma {:axiom} SetCover_HittingSet2<T>(U:set<T>, S: set<set<T>>, k:int)
+  requires forall s | s in S :: s <= U
+  requires isCover(U, S)
+  ensures var (HU,HS,Hk) := SetCover_to_HittingSet(U,S,k);
+              SetCover(U,S,k) <== HittingSet(HU,HS,Hk)
+
+ 
 lemma {:axiom} SetCover_HittingSet<T>(U:set<T>, S: set<set<T>>, k:int)
   requires forall s | s in S :: s <= U
   requires isCover(U, S)
-  ensures SetCover(U,S,k) <==> HittingSet(SetCover_to_HittingSet(U,S,k).0,SetCover_to_HittingSet(U,S,k).1,SetCover_to_HittingSet(U,S,k).2)
+  ensures var (HU,HS,Hk) := SetCover_to_HittingSet(U,S,k);
+              SetCover(U,S,k) <==> HittingSet(HU,HS,Hk)
+  {
+   var (HU,HS,Hk) := SetCover_to_HittingSet(U,S,k);
+   SetCover_HittingSet1(U,S,k);
+   SetCover_HittingSet2(U,S,k);
+  }        
   
+lemma tisCover<T>(U: set<T>, S: set<set<T>>) 
+requires forall s | s in S :: s <= U
+ ensures 
+   var newS: set<set<set<T>>> := (set u | u in U :: (set s | s in S && u in s));
+   isCover(S-{{}},newS)
+{ var newS: set<set<set<T>>> := (set u | u in U :: (set s | s in S && u in s));
+  forall e | e in S-{{}} ensures (exists s | s in newS :: e in s)
+  {    assert e != {};
+       assert exists n :: n in e; 
+       var n :| n in e;
+    assume {:axiom} false;
+    }
+    
+}
 
 function HittingSet_to_SetCover<T>(U: set<T>, S: set<set<T>>, k: int) : (r:(set<set<T>>, set<set<set<T>>>, int))
   requires forall s | s in S :: s <= U // los sets son subsets del universo
-  requires forall s1 | s1 in S :: !(exists s2 | s2 in S - {s1} :: s1 == s2) // no hay dos sets iguales en S
+  //requires forall s1 | s1 in S :: !(exists s2 | s2 in S - {s1} :: s1 == s2) // no hay dos sets iguales en S
   ensures forall s | s in r.1 :: s <= r.0 // los sets son subsets del universo
   ensures isCover(r.0, r.1) // existe un subconjunto de sets tal que su union es igual al universo
 {
   var newS: set<set<set<T>>> := (set u | u in U :: (set s | s in S && u in s));
-  (S, newS, k)
+  tisCover(U,S);
+  (S-{{}}, newS, k)
 }
 
-lemma {:axiom} HittingSet_SetCover<T>(U:set<T>, S: set<set<T>>, k:int)
-  requires forall s | s in S :: s <= U // los sets son subsets del universo
-  requires forall s1 | s1 in S :: !(exists s2 | s2 in S - {s1} :: s1 == s2) // no hay dos sets iguales en S
-  ensures HittingSet(U,S,k) <==> SetCover(HittingSet_to_SetCover(U,S,k).0,HittingSet_to_SetCover(U,S,k).1,HittingSet_to_SetCover(U,S,k).2)
-  
 
-//Lo mismo en sentido contrario
+lemma {:axiom} HittingSet_SetCover1<T>(U:set<T>, S: set<set<T>>, k:int)
+  requires forall s | s in S :: s <= U // los sets son subsets del universo
+  //requires forall s1 | s1 in S :: !(exists s2 | s2 in S - {s1} :: s1 == s2) // no hay dos sets iguales en S
+  ensures var (SU,SS,Sk) := HittingSet_to_SetCover(U,S,k);
+          HittingSet(U,S,k) ==> SetCover(SU,SS,Sk)
+         
+
+lemma {:axiom} HittingSet_SetCover2<T>(U:set<T>, S: set<set<T>>, k:int)
+  requires forall s | s in S :: s <= U // los sets son subsets del universo
+  //requires forall s1 | s1 in S :: !(exists s2 | s2 in S - {s1} :: s1 == s2) // no hay dos sets iguales en S
+  ensures var (SU,SS,Sk) := HittingSet_to_SetCover(U,S,k);
+          HittingSet(U,S,k) <== SetCover(SU,SS,Sk)
+
+
+lemma HittingSet_SetCover<T>(U:set<T>, S: set<set<T>>, k:int)
+  requires forall s | s in S :: s <= U // los sets son subsets del universo
+  //requires forall s1 | s1 in S :: !(exists s2 | s2 in S - {s1} :: s1 == s2) // no hay dos sets iguales en S
+  ensures var (SU,SS,Sk) := HittingSet_to_SetCover(U,S,k);
+          HittingSet(U,S,k) <==> SetCover(SU,SS,Sk)
+  { var (SU,SS,Sk) := HittingSet_to_SetCover(U,S,k);
+    HittingSet_SetCover1(U,S,k);
+    HittingSet_SetCover2(U,S,k);
+    }
 
 /* 
 ghost function Sum(a:seq<int>,si : set<int>) : int
