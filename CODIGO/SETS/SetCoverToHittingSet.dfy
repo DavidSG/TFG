@@ -42,17 +42,17 @@ lemma SetCover_HittingSet<T>(U:set<T>, S: set<set<T>>, k:nat)
   requires forall s | s in S :: s <= U
   requires isCover(U, S)
   ensures var (HU,HS,Hk) := SetCover_to_HittingSet(U,S,k);
-              SetCover(U,S,k) <== HittingSet(HU,HS,Hk)
+              SetCover(U,S,k) <== HittingSet(HU,HS,Hk) // si hitting set -> set cover
 { var (HU,HS,Hk) := SetCover_to_HittingSet(U,S,k);
-   if (HittingSet(HU,HS,Hk)) {  
-    var C:set<set<T>> :| hitsSets(HS, C) && |C| <= Hk && C <= HU;
+   if (HittingSet(HU,HS,Hk)) {  // demostramos que hitting set es cierto (importante para la implicación)
+    var C:set<set<T>> :| hitsSets(HS, C) && |C| <= Hk && C <= HU; // solución a hitting set {{1,2,3}{4,5}}
     //Veamos que se cumple que C es cobertura de U, es decir, isCover(U,C)
     forall u | u in U
     ensures exists s :: s in C && u in s
-     { var ss := (set s | s in S && u in s);
-       assert ss in HS && ss * C != {};
-       var s :| s in ss * C;
-       assert u in s;
+     { var ss := (set s | s in S && u in s); // para 2 {{1,2,3}{2,4}}
+       assert ss in HS && ss * C != {}; // la interseccion de {{1,2,3}{2,4}} y {{1,2,3}{4,5}}
+       var s :| s in ss * C; // s es el elemento elegido de U para hacer el hitting set
+       assert u in s; // u está en S
      }
    }
 }
@@ -66,7 +66,7 @@ requires u in U
 requires forall s | s in S :: s <= U
 requires C <= S && isCover(U, C) 
 ensures  var ss := (set s | s in S && u in s);
-         C * ss == (set s | s in C && u in  s) != {}
+         C * ss == (set s | s in C && u in s) != {}
 {assert C != {};
  var ss := (set s | s in S && u in s);
  var cs :| cs in C && u in cs;
@@ -83,7 +83,7 @@ ensures  forall u | u in U ::
          C * ss == (set s | s in C && u in  s) != {})
 {forall u | u in U 
  ensures (var ss := (set s | s in S && u in s);
-         C * ss == (set s | s in C && u in  s) != {})
+         C * ss == (set s | s in C && u in s) != {})
          {intersect_set_of_sets(U,u,S,C);}
 
 }
@@ -119,23 +119,14 @@ lemma SetCover_HittingSet2<T>(U:set<T>, S: set<set<T>>, k:nat)
             var s :| s in S && s !={};
             assert s in S-{{}};
             assert S-{{}}!={};}
-      //Tenemos que demostrar que el mismo C es Hitting set
-      //Por ser C cobertura sabemos que cada elemento de U
-      //corresponde a un conjunto de newS cuyos conjuntos contienen a u
-      //Usamos el lema auxiliar
+      // Tenemos que demostrar que el mismo C es Hitting set
+      // Por ser C cobertura sabemos que cada elemento de U
+      // corresponde a un conjunto de newS cuyos conjuntos contienen a u
+      // Usamos el lema auxiliar
       gintersect_set_of_sets(U,S,C);
-      //assert forall s | s in HS :: C * s != {};
-      //assert exists s:set<set<T>> :: hitsSets(HS, s) && |s| <= Hk && s <= HU;
+      // assert forall s | s in HS :: C * s != {};
+      // assert exists s:set<set<T>> :: hitsSets(HS, s) && |s| <= Hk && s <= HU;
       }
      } 
   }
- 
-
- 
-       
   
-
-
-
-
-
