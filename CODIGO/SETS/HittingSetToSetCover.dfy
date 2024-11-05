@@ -17,13 +17,17 @@ requires forall s | s in S :: s <= U
 }
 
 function HittingSet_to_SetCover<T>(U: set<T>, S: set<set<T>>, k: nat) : (r:(set<set<T>>, set<set<set<T>>>, int))
-  requires forall s | s in S :: s <= U // los sets son subsets del universo
+  requires forall s | s in S ::  s <= U // los sets son subsets del universo
+  requires {} !in S
   ensures forall s | s in r.1 :: s <= r.0 // los sets son subsets del universo
   ensures isCover(r.0, r.1) // existe un subconjunto de sets tal que su union es igual al universo
 {
   var newS: set<set<set<T>>> := (set u | u in U :: (set s | s in S && u in s));
-  tisCover(U,S);
-  (S-{{}}, newS, k)
+  
+  if ({} in S) then (S, (set s | s in S :: {s}), |S|-1)//que devuelva falso siempre 
+  else
+   tisCover(U,S);
+   (S, newS, k)
 }
 
 lemma HittingSet_SetCover<T>(U:set<T>, S: set<set<T>>, k:nat)
