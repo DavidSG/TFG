@@ -1,4 +1,4 @@
-include "Sum.dfy"
+include "../Auxiliar/Sum.dfy"
 
 // DEFINICION DEL PROBLEMA INTERCALAR
 
@@ -14,5 +14,5 @@ ghost predicate Intercalar(E:seq<int>)
     var En := multiset(E);
     var M := En - multiset{E[0]};
 
-    exists I:multiset<int> | I <= En :: Sum(M) + E[0] == 0 
+    exists I:multiset<int> | I <= En :: GSum(M) + E[0] == 0 
 }

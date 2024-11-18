@@ -1,4 +1,4 @@
-include "Sum.dfy"
+include "../Auxiliar/Sum.dfy"
 
 // DEFINICION DEL PROBLEMA ENVASAR
 
@@ -7,6 +7,6 @@ include "Sum.dfy"
 // tales que la suma de los elementos de cada subconjunto sea a lo sumo E
 ghost predicate Envasar(A:multiset<int>, E:int, k:int)
 {
-  exists S:multiset<multiset<int>> | forall e | e in S :: e <= A && Sum(e) <= E :: |S| <= k 
+  exists S:multiset<multiset<int>> | forall e | e in S :: e <= A && GSum(e) <= E :: |S| <= k 
 }
 

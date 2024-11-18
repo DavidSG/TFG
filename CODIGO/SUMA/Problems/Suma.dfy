@@ -1,4 +1,4 @@
-include "Sum.dfy"
+include "../Auxiliar/Sum.dfy"
 
 // DEFINICION DEL PROBLEMA SUMA
 // El problema de la Suma consiste en decidir, dados un vector de enteros A[] y un valor
@@ -7,5 +7,5 @@ include "Sum.dfy"
 
 ghost predicate Suma(A:multiset<int>, S:int)
 {
-  exists I:multiset<int> | I <= A :: Sum(I) == S
+  exists I:multiset<int> | I <= A :: GSum(I) == S
 }

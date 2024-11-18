@@ -1,4 +1,4 @@
-include "Sum.dfy"
+include "../Auxiliar/Sum.dfy"
 
 // DEFINICION DEL PROBLEMA INTERVALO
 
@@ -7,5 +7,5 @@ include "Sum.dfy"
 
 ghost predicate Intervalo(A:multiset<int>, S:int, T:int)
 {
-  exists I:multiset<int> | I <= A :: S <= Sum(I) < T
+  exists I:multiset<int> | I <= A :: S <= GSum(I) < T
 }
