@@ -16,7 +16,7 @@ function FSum(m : multiset<int>) : int
 }
 */
 
-function FSum(m : multiset<int>) : int
+function FSum(m : multiset<T>) : nat
 {
   if m == multiset{} then 0 
   else 
@@ -24,8 +24,9 @@ function FSum(m : multiset<int>) : int
   x + FSum(m - multiset{x})
 }
 
-ghost function GSum(m : multiset<int>) : int
+type Num =  int | nat;
+ghost function GSum<T: Num>(m: multiset<T>) : T
 {
-	if m == multiset{} then 0 
+  if m == multiset{} then 0
   else var x :| x in m; x + GSum(m - multiset{x})
 }

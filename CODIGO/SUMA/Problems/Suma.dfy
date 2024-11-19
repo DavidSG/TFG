@@ -1,11 +1,13 @@
 include "../Auxiliar/Sum.dfy"
 
+// nota: I | **** :: *** -> lo de despues de | significa QUE ES I, y lo de despues de :: significa QUE LIMITACIONES TIENE
+
 // DEFINICION DEL PROBLEMA SUMA
 // El problema de la Suma consiste en decidir, dados un vector de enteros A[] y un valor
 // S, si podemos encontrar un subconjunto I del conjunto de índices del vector tal que la suma de
 // los correspondientes elementos del mismo sea S
 
-ghost predicate Suma(A:multiset<nat>, S:nat)
+ghost predicate Suma(A:multiset<int>, S:int)
 {
-  exists I:multiset<nat> | I <= A :: GSum(I) == S
+  exists I:multiset<int> | I <= A :: GSum(I) == S
 }
