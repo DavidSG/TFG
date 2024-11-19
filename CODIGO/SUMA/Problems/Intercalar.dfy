@@ -7,7 +7,7 @@ include "../Auxiliar/Sum.dfy"
 // resultante evaluada de izquierda a derecha, y sin ningún tipo de precedencia
 // entre sus operadores, sea finalmente 0
 
-ghost predicate Intercalar(E:seq<int>)
+ghost predicate Intercalar(E:seq<nat>)
 {
   if (|E| == 0) then true
   else

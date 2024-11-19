@@ -23,8 +23,8 @@ lemma Suma_Intervalo1(A:multiset<int>, S:int)
     var (IE,IS,IT) := Suma_To_Intervalo(A,S);
     // IE = {1, 2, 4}, IS = 6, IT = 7
     if (Intervalo(IE,IS,IT)) {
-        var C:multiset<int> :| C <= A && IS <= GSum(C) < IT; // C = 2, 4  ->  Sum(C) = 6
-        assert GSum(C) == S; // Sum(C) == 6
+        var C:multiset<int> :| C <= A && IS <= GSumInt(C) < IT; // C = 2, 4  ->  Sum(C) = 6
+        assert GSumInt(C) == S; // Sum(C) == 6
     }
 }
 
@@ -36,8 +36,7 @@ lemma Suma_Intervalo2(A:multiset<int>, S:int)
     if (Suma(A,S)) {
         var (IE,IS,IT) := Suma_To_Intervalo(A,S);
 
-        var C:multiset<int> :| C <= A && GSum(C) == S; // C = 2, 4  ->  Sum(C) = 6
-        assert IS <= GSum(C) < IT; // IS <= 6 < IT
+        var C:multiset<int> :| C <= A && GSumInt(C) == S; // C = 2, 4  ->  Sum(C) = 6
+        assert IS <= GSumInt(C) < IT; // IS <= 6 < IT
     }
 }
-

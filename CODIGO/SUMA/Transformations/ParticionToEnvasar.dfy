@@ -2,10 +2,9 @@ include "../Auxiliar/Sum.dfy"
 include "../Problems/Particion.dfy"
 include "../Problems/Envasar.dfy"
 
-
-function Particion_to_Envasar(A:multiset<nat>) : (r:(multiset<nat>, nat, nat))
+function Particion_to_Envasar(A:multiset<int>) : (r:(multiset<nat>, nat, nat))
 {
-    var S := FSum(A)/2;
+    var S := FSumNat(A)/2;
     (A,S,2)
 }
 

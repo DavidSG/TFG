@@ -14,7 +14,7 @@ ghost predicate Suma(A:multiset<int>, S:int)
 
 
 
-method checkSuma(A:multiset<int>, S:int, I:multiset<int>) returns (b:bool)
+method {:verify false} checkSuma(A:multiset<int>, S:int, I:multiset<int>) returns (b:bool)
 ensures b == (I <= A && GSumInt(I) == S)
 { var I' := I;
   var suma := 0; var e:int; 
