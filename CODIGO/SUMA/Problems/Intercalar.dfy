@@ -9,10 +9,12 @@ include "../Auxiliar/Sum.dfy"
 
 ghost predicate Intercalar(E:seq<int>)
 {
-  if |E| == 0 then true
+  if (|E| == 0) then true
   else
-    var En := multiset(E);
-    var M := En - multiset{E[0]};
-
-    exists I:multiset<int> | I <= En :: GSum(M) + E[0] == 0 
+   var elements:= multiset(E);
+   exists E1,E2 :: 
+        E[0] in E1 && E1 <= elements //E1 positive elements
+     && E2 <= elements               //E2 negative elements
+     && E1 + E2 == elements
+     && GSumInt(E1) - GSumInt(E2) == 0
 }

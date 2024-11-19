@@ -9,5 +9,27 @@ include "../Auxiliar/Sum.dfy"
 
 ghost predicate Suma(A:multiset<int>, S:int)
 {
-  exists I:multiset<int> | I <= A :: GSum(I) == S
+  exists I:multiset<int> | I <= A :: GSumInt(I) == S
+}
+
+
+
+method checkSuma(A:multiset<int>, S:int, I:multiset<int>) returns (b:bool)
+ensures b == (I <= A && GSumInt(I) == S)
+{ var I' := I;
+  var suma := 0; var e:int; 
+  b := I <= A;
+  
+  while |I'| > 0
+  decreases |I'|
+  invariant I' <= I
+  invariant suma == GSumInt(I - I')
+   { 
+     e := minInt(I');
+     assume suma + e == GSumInt(I - (I'-multiset{e}));
+     suma := suma + e;
+     I' := I' - multiset{e};
+   }
+  assert suma == GSumInt(I); 
+  b := b && suma == S; 
 }

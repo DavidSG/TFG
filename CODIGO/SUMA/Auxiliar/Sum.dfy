@@ -16,17 +16,35 @@ function FSum(m : multiset<int>) : int
 }
 */
 
-function FSum(m : multiset<T>) : nat
+function minNat(m:multiset<nat>): (l:nat)
+ensures l in m && (forall x | x in m :: x <= l) 
+
+function minInt(m:multiset<int>): (l:int)
+ensures l in m && (forall x | x in m :: x <= l) 
+
+function FSumNat(m : multiset<nat>) : nat
 {
   if m == multiset{} then 0 
   else 
-  var x :| x in m; 
-  x + FSum(m - multiset{x})
+  var x := minNat(m); 
+  x + FSumNat(m - multiset{x})
 }
 
-type Num =  int | nat;
-ghost function GSum<T: Num>(m: multiset<T>) : T
+function FSumInt(m : multiset<int>) : int
+{
+  if m == multiset{} then 0 
+  else 
+  var x := minInt(m);   
+  x + FSumInt(m - multiset{x})
+}
+ghost function GSumInt(m: multiset<int>) : int
 {
   if m == multiset{} then 0
-  else var x :| x in m; x + GSum(m - multiset{x})
+  else var x :| x in m; x + GSumInt(m - multiset{x})
+}
+
+ghost function GSumNat(m: multiset<nat>) : nat
+{
+  if m == multiset{} then 0
+  else var x :| x in m; x + GSumNat(m - multiset{x})
 }
