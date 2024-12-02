@@ -7,5 +7,5 @@ include "../Auxiliar/Sum.dfy"
 
 ghost predicate Intervalo(A:multiset<nat>, S:nat, T:nat)
 {
-  exists I:multiset<int> | I <= A :: S <= GSumInt(I) < T
+  exists I:multiset<nat> | I <= A :: S <= GSumNat(I) < T
 }
