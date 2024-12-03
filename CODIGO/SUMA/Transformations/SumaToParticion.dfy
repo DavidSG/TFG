@@ -50,7 +50,7 @@ lemma Suma_Particion2(A:multiset<int>, S:int)
         var R := A - P1; // R = {1, 3}
         var P2 := R + multiset{N}; // P2 = {1, 3, 2} -> Sum(P2) = 6
         
-        /*
+        
         assert GSumInt(P1) == S;
         assert GSumInt(P2) == S; 
 
@@ -58,7 +58,7 @@ lemma Suma_Particion2(A:multiset<int>, S:int)
         assert GSumInt(A) == GSumInt(P1) + GSumInt(R);
         assert N == 2*S - GSumInt(A) == S - GSumInt(R);
 
-        assert GSumInt(P1) == GSumInt(P2) == S && P1 + P2 == PA ; */
+        assert GSumInt(P1) == GSumInt(P2) == S && P1 + P2 == PA ; 
 
 
         assert P1 <= A && P2 <= A && P1 + P2 == PA && GSumInt(P1) == GSumInt(P2); // N in PA && GSumInt(C) == GSumInt(PA') == S && C + PA' == PA; // IS <= 6 < IT

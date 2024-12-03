@@ -22,6 +22,11 @@ ensures l in m && (forall x | x in m :: x <= l)
 function minInt(m:multiset<int>): (l:int)
 ensures l in m && (forall x | x in m :: x <= l) 
 
+
+lemma {:induction m} FSumNatComputaGSumNat(m : multiset<nat>)
+ensures FSumNat(m) == GSumNat(m)
+
+
 function FSumNat(m : multiset<nat>) : nat
 {
   if m == multiset{} then 0 

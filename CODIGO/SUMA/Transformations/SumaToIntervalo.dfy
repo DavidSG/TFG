@@ -23,7 +23,7 @@ lemma Suma_Intervalo1(A:multiset<nat>, S:nat)
     var (IE,IS,IT) := Suma_to_Intervalo(A,S);
     // IE = {1, 2, 4}, IS = 6, IT = 7
     if (Intervalo(IE,IS,IT)) {
-        var C:multiset<int> :| C <= A && IS <= GSumNat(C) < IT; // C = 2, 4  ->  Sum(C) = 6
+        var C:multiset<int> :| C <= IE && IS <= GSumNat(C) < IT; // C = 2, 4  ->  Sum(C) = 6
         assert GSumNat(C) == S; // Sum(C) == 6
     }
 }
@@ -37,6 +37,6 @@ lemma Suma_Intervalo2(A:multiset<nat>, S:nat)
         var (IE,IS,IT) := Suma_to_Intervalo(A,S);
 
         var C:multiset<int> :| C <= A && GSumNat(C) == S; // C = 2, 4  ->  Sum(C) = 6
-        assert IS <= GSumNat(C) < IT; // IS <= 6 < IT
+        assert S == IS <= GSumNat(C) < IT == S+1; // IS <= 6 < IT
     }
 }
