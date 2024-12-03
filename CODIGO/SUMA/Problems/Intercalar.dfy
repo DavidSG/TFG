@@ -13,7 +13,7 @@ ghost predicate Intercalar(E:seq<nat>)
   else
    var elements:= multiset(E);
    exists E1,E2 :: 
-        E[0] in E1 && E1 <= elements //E1 positive elements
+     E[0] in E1 && E1 <= elements //E1 positive elements
      && E2 <= elements               //E2 negative elements
      && E1 + E2 == elements
      && GSumInt(E1) - GSumInt(E2) == 0
