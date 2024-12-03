@@ -26,6 +26,8 @@ ensures l in m && (forall x | x in m :: x <= l)
 lemma {:induction m} FSumNatComputaGSumNat(m : multiset<nat>)
 ensures FSumNat(m) == GSumNat(m)
 
+lemma {:induction m} FSumIntComputaGSumNat(m : multiset<nat>)
+ensures FSumInt(m) == GSumInt(m)
 
 function FSumNat(m : multiset<nat>) : nat
 {
@@ -53,3 +55,13 @@ ghost function GSumNat(m: multiset<nat>) : nat
   if m == multiset{} then 0
   else var x :| x in m; x + GSumNat(m - multiset{x})
 }
+
+lemma GSumNatPartes(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>)
+    requires P1 <= A && P2 <= A && P1 + P2 == A 
+    ensures GSumNat(A) == GSumNat(P1) + GSumNat(P2)
+//Por induccion 
+
+lemma GSumIntPartes(A:multiset<int>, P1:multiset<int>, P2:multiset<int>)
+    requires P1 <= A && P2 <= A && P1 + P2 == A 
+    ensures GSumInt(A) == GSumInt(P1) + GSumInt(P2)
+//Por induccion 

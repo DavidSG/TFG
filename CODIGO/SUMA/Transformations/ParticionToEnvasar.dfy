@@ -16,10 +16,6 @@ lemma Particion_Envasar(A:multiset<nat>)
     Particion_Envasar2(A);
 }
 
-lemma GSumNatPartes(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>)
-    requires P1 <= A && P2 <= A && P1 + P2 == A 
-    ensures GSumNat(A) == GSumNat(P1) + GSumNat(P2)
-//Por induccion 
 
 lemma Particion_Envasar1(A:multiset<nat>)
     ensures var (EA,EE,Ek) := Particion_to_Envasar(A);

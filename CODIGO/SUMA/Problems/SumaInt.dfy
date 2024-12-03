@@ -14,7 +14,7 @@ ghost predicate Suma(A:multiset<int>, S:int)
 
 
 
-method {:verify false} checkSuma(A:multiset<int>, S:int, I:multiset<int>) returns (b:bool)
+method {:verify true} checkSuma(A:multiset<int>, S:int, I:multiset<int>) returns (b:bool)
 ensures b == (I <= A && GSumInt(I) == S)
 { var I' := I;
   var suma := 0; var e:int; 
@@ -26,10 +26,13 @@ ensures b == (I <= A && GSumInt(I) == S)
   invariant suma == GSumInt(I - I')
    { 
      e := minInt(I');
-     assume suma + e == GSumInt(I - (I'-multiset{e}));
+     assert e in I';
+     GSumIntPartes(I - (I'-multiset{e}), I - I',multiset{e});
+     assert suma + e == GSumInt(I - (I'-multiset{e}));
      suma := suma + e;
      I' := I' - multiset{e};
    }
+  assert I' == multiset{} && I - I' == I;
   assert suma == GSumInt(I); 
   b := b && suma == S; 
 }
