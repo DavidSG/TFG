@@ -18,12 +18,17 @@ function FSum(m : multiset<int>) : int
 
 function minNat(m:multiset<nat>): (l:nat)
 requires m != multiset{}
-ensures l in m && (forall x | x in m :: x <= l) 
+ensures l in m && (forall x | x in m :: l <= x) 
+{ minInt(m)
+}
 
 function minInt(m:multiset<int>): (l:int)
 requires m != multiset{}
-ensures l in m && (forall x | x in m :: x <= l) 
-
+ensures l in m && (forall x | x in m :: l <= x) 
+{ HasMinimumInt(m);
+  var x :| x in m && (forall y | y in m :: x <= y); 
+  x
+}
 
 lemma {:induction m} FSumNatComputaGSumNat(m : multiset<nat>)
 ensures FSumNat(m) == GSumNat(m)
@@ -32,7 +37,7 @@ lemma {:induction m} FSumIntComputaGSumNat(m : multiset<nat>)
 ensures FSumInt(m) == GSumInt(m)
 
 
-lemma HasMinimum(m: multiset<nat>)
+/*lemma HasMinimumNat(m: multiset<nat>)
   requires m != multiset{}
   ensures exists z :: z in m && forall y | y in m :: z <= y
 {
@@ -44,7 +49,36 @@ lemma HasMinimum(m: multiset<nat>)
   } else {
     // s-{z} is a smaller, nonempty set and it has a minimum
     var m' := m - multiset{z};
-    HasMinimum(m');
+    HasMinimumNat(m');
+    var z' :| z' in m' && forall y :: y in m' ==> z' <= y;
+    // the minimum of s' is the same as the miminum of s
+    forall y | y in m
+      ensures z' <= y
+    {
+      if
+      case y in m' =>
+        assert z' <= y;  // because z' in minimum in s'
+      case y == z =>
+        var k :| k in m && k < z;  // because z is not minimum in s
+        assert k in m';  // because k != z
+    }
+  }
+}*/
+
+
+lemma HasMinimumInt(m: multiset<int>)
+  requires m != multiset{}
+  ensures exists z :: z in m && forall y | y in m :: z <= y
+{
+  var z :| z in m;
+  if m == multiset{z} {
+    // the mimimum of a singleton set is its only element
+  } else if forall y :: y in m ==> z <= y {
+    // we happened to pick the minimum of s
+  } else {
+    // s-{z} is a smaller, nonempty set and it has a minimum
+    var m' := m - multiset{z};
+    HasMinimumInt(m');
     var z' :| z' in m' && forall y :: y in m' ==> z' <= y;
     // the minimum of s' is the same as the miminum of s
     forall y | y in m
@@ -59,11 +93,12 @@ lemma HasMinimum(m: multiset<nat>)
     }
   }
 }
+
 function FSumNat(m : multiset<nat>) : nat
-{
+{ 
   if m == multiset{} then 0 
   else 
-  HasMinimum(m);
+  HasMinimumInt(m);
   var x :| x in m && (forall y | y in m :: x <= y); 
   x + FSumNat(m - multiset{x})
 }
@@ -72,7 +107,8 @@ function FSumInt(m : multiset<int>) : int
 {
   if m == multiset{} then 0 
   else 
-  var x := minInt(m);   
+  HasMinimumInt(m);
+  var x :| x in m && (forall y | y in m :: x <= y); 
   x + FSumInt(m - multiset{x})
 }
 ghost function GSumInt(m: multiset<int>) : int
