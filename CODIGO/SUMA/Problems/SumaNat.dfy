@@ -14,6 +14,5 @@ method {:verify true} checkSumaNat(A:multiset<nat>, S:nat, I:multiset<nat>) retu
 ensures b == (I <= A && GSumNat(I) == S)
 { 
   var suma := mSumaNat(I);
-  assert suma == GSumNat(I); 
   b := I <= A && suma == S; 
 }

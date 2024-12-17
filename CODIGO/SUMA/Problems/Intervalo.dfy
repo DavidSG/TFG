@@ -14,6 +14,5 @@ method {:verify true} checkIntervalo(A:multiset<nat>, S:nat, T:nat, I:multiset<n
 ensures b == (I <= A && S <= GSumNat(I) < T)
 { 
   var suma := mSumaNat(I);
-  assert suma == GSumNat(I); 
   b := I <= A && S <= suma < T; 
 }
