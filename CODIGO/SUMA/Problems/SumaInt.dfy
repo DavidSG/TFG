@@ -7,32 +7,18 @@ include "../Auxiliar/Sum.dfy"
 // S, si podemos encontrar un subconjunto I del conjunto de índices del vector tal que la suma de
 // los correspondientes elementos del mismo sea S
 
-ghost predicate Suma(A:multiset<int>, S:int)
+ghost predicate SumaInt(A:multiset<int>, S:int)
 {
   exists I:multiset<int> | I <= A :: GSumInt(I) == S
 }
 
 
 
-method {:verify true} checkSuma(A:multiset<int>, S:int, I:multiset<int>) returns (b:bool)
+method {:verify true} checkSumaInt(A:multiset<int>, S:int, I:multiset<int>) returns (b:bool)
 ensures b == (I <= A && GSumInt(I) == S)
-{ var I' := I;
-  var suma := 0; var e:int; 
-  b := I <= A;
-  
-  while |I'| > 0
-  decreases |I'|
-  invariant I' <= I
-  invariant suma == GSumInt(I - I')
-   { 
-     e := minInt(I');
-     assert e in I';
-     GSumIntPartes(I - (I'-multiset{e}), I - I',multiset{e});
-     assert suma + e == GSumInt(I - (I'-multiset{e}));
-     suma := suma + e;
-     I' := I' - multiset{e};
-   }
-  assert I' == multiset{} && I - I' == I;
+{ 
+  var suma := mSumaInt(I);
   assert suma == GSumInt(I); 
-  b := b && suma == S; 
+  b := I <= A && suma == S; 
+
 }

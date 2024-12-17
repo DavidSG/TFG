@@ -15,7 +15,7 @@ function Particion_to_Suma(A:multiset<int>) : (r:(multiset<int>, int))
 
 lemma Particion_Suma(A:multiset<int>)
   ensures var (SA,SS) := Particion_to_Suma(A);
-          Particion(A) <==> Suma(SA,SS)
+          Particion(A) <==> SumaInt(SA,SS)
 { 
     Particion_Suma1(A);
     Particion_Suma2(A);
@@ -23,12 +23,12 @@ lemma Particion_Suma(A:multiset<int>)
 
 lemma Particion_Suma1(A:multiset<int>)
     ensures var (SA,SS) := Particion_to_Suma(A);
-          Particion(A) <== Suma(SA,SS)
+          Particion(A) <== SumaInt(SA,SS)
 {   
     var (SA,SS) := Particion_to_Suma(A);
     // A = {1,2,3}
     // SA = {1,2,3} SS = 3
-    if (Suma(SA,SS)) {
+    if (SumaInt(SA,SS)) {
         var C:multiset<int> :| C <= SA && GSumInt(C) == SS; // {1,2}
 
         var P1 := C; // {1,2}
@@ -40,7 +40,7 @@ lemma Particion_Suma1(A:multiset<int>)
 
 lemma Particion_Suma2(A:multiset<int>)
     ensures var (SA,SS) := Particion_to_Suma(A);
-          Particion(A) ==> Suma(SA,SS)
+          Particion(A) ==> SumaInt(SA,SS)
 {
     // A = {1, 2, 3}
     if (Particion(A)) {

@@ -9,3 +9,11 @@ ghost predicate Particion(A:multiset<int>)
   exists P1:multiset<int>, P2:multiset<int> | 
     P1 <= A && P2 <= A && P1 + P2 == A :: GSumInt(P1) == GSumInt(P2)
 }
+
+method {:verify true} checkParticionInt(A:multiset<int>, P1:multiset<int>, P2:multiset<int>) returns (b:bool)
+ensures b ==  (P1 <= A && P2 <= A && P1 + P2 == A && GSumInt(P1) == GSumInt(P2))
+{ 
+  var suma1 := mSumaInt(P1);
+  var suma2 := mSumaInt(P2);
+  b := P1 <= A && P2 <= A && P1 + P2 == A && suma1 == suma2; 
+}
