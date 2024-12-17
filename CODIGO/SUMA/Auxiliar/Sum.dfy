@@ -32,10 +32,35 @@ ensures l in m && (forall x | x in m :: l <= x)
 
 lemma {:induction m} FSumNatComputaGSumNat(m : multiset<nat>)
 ensures FSumNat(m) == GSumNat(m)
+{ if m == multiset{} 
+  {
+   // assert GSumNat(m) == 0;
+  }
+  else
+  {
+    var x := minNat(m);
+  //  assert FSumNat(m) == x + FSumNat(m - multiset{x});
+    FSumNatComputaGSumNat(m - multiset{x});
+   // assert FSumNat(m - multiset{x}) == GSumNat(m - multiset{x});
+    GSumNatPartes(m, multiset{x}, m - multiset{x});
+   // assert x + GSumNat(m - multiset{x}) == GSumNat(m);
+  }
+}
 
-lemma {:induction m} FSumIntComputaGSumNat(m : multiset<nat>)
+lemma {:induction m} FSumIntComputaGSumInt(m : multiset<nat>)
 ensures FSumInt(m) == GSumInt(m)
-
+{
+  if m == multiset{} 
+  {
+   // assert GSumInt(m) == 0;
+  }
+  else
+  {
+    var x := minInt(m);
+    FSumIntComputaGSumInt(m - multiset{x});
+    GSumIntPartes(m, multiset{x}, m - multiset{x});
+  }
+}
 
 /*lemma HasMinimumNat(m: multiset<nat>)
   requires m != multiset{}
@@ -98,8 +123,7 @@ function FSumNat(m : multiset<nat>) : nat
 { 
   if m == multiset{} then 0 
   else 
-  HasMinimumInt(m);
-  var x :| x in m && (forall y | y in m :: x <= y); 
+  var x := minNat(m);
   x + FSumNat(m - multiset{x})
 }
 
@@ -107,9 +131,8 @@ function FSumInt(m : multiset<int>) : int
 {
   if m == multiset{} then 0 
   else 
-  HasMinimumInt(m);
-  var x :| x in m && (forall y | y in m :: x <= y); 
-  x + FSumInt(m - multiset{x})
+   var x := minInt(m);
+   x + FSumInt(m - multiset{x})
 }
 ghost function GSumInt(m: multiset<int>) : int
 {
