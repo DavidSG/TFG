@@ -10,10 +10,19 @@ function multiset_to_seq (A:multiset<nat>) : (r:(seq<nat>))
    [x] + multiset_to_seq(A - multiset{x})
 }
 
+lemma multiset_to_seqLemma (A:multiset<nat>)
+    ensures A == multiset(multiset_to_seq(A))
+
+{
+    var SA := multiset(multiset_to_seq(A));
+    assert A == SA;
+}
+
 function Particion_to_Intercalar (A:multiset<nat>) : (r:(seq<nat>))
 {
     ([0] + multiset_to_seq(A))
 }
+
 
 lemma SumaMulticonjuntos(M1:multiset<nat>, M2:multiset<nat>)
     ensures GSumNat(M1) + GSumNat(M2) == GSumNat(M1+M2)
@@ -31,9 +40,9 @@ lemma Particion_Intercalar1(A:multiset<nat>)
           Particion(A) <== Intercalar(E)
 {   
     var E := Particion_to_Intercalar(A);
-    // E = {0, 1, 2, 4}
+    // E = {0, 1, 2, 3}
     if (Intercalar(E)) {
-        if (|E| == 0) {
+        if (|E| < 2) {
             var P1 := multiset{}; var P2 := multiset{};
             assert P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2);
         }
@@ -49,9 +58,9 @@ lemma Particion_Intercalar1(A:multiset<nat>)
             var P1:multiset<nat> := E1 - multiset{0};
             var P2:multiset<nat> := E2;
             
-            // Demostracion 1: E - 0 == A
-            assume [0] + multiset_to_seq(A) == E;
-            assume multiset{0} + A == elements;
+            // Demostracion 1: elements - 0 == A
+            multiset_to_seqLemma(A); // E == [0] + multiset_to_seq(A) && multiset(multiset_to_seq(A)) == A =>
+                                     // => multiset{E} - multiset{0} == A
 
             // Demostracion 2: Sum(P1) = Sum (E1-0)
             assert E1 == P1 + multiset{0}; SumaMulticonjuntos(P1,multiset{0});
@@ -78,8 +87,7 @@ lemma Particion_Intercalar2(A:multiset<nat>)
         var E2:multiset<nat> := P2;
 
         // Demostracion 1: A + 0 = E
-        assume [0] + multiset_to_seq(A) == E;
-        assume multiset{0} + A == elements;
+        multiset_to_seqLemma(A);
 
         // Demostracion 2: Sum(E1) = Sum (0+P1)
         assert E1 == P1 + multiset{0}; SumaMulticonjuntos(P1,multiset{0});

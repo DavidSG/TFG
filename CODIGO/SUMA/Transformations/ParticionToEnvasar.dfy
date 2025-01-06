@@ -60,13 +60,16 @@ lemma  Particion_Envasar2(A:multiset<nat>)
 {
     // A = {1, 2, 3}
     if (Particion(A)) {
-        /*var (EA,EE,Ek) := Particion_to_Envasar(A);
+        var (EA,EE,Ek) := Particion_to_Envasar(A);
 
         var P1:multiset<nat>, P2:multiset<nat> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2); // {1,2} {3}
         var C: multiset<multiset<nat>> := multiset{P1, P2}; // { {1,2}, {3}}
         FSumNatComputaGSumNat(EA);
         GSumNatPartes(EA, P1, P2);
 
+        assert |C| <= Ek && Union(C) == A && forall e | e in C :: e <= A && GSumNat(e) <= EE;
+
+        /*
         //assume P1 <= A && P2 <= A && GSumNat(P1) <= EE && GSumNat(P2) <= EE && |C| <= Ek && P1 + P2 == A;
         assume forall e | e in C :: GSumNat(e) <= EE;
         assume Union(C) == A;
