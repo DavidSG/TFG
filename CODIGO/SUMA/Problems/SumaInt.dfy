@@ -12,24 +12,10 @@ ghost predicate SumaInt(A:multiset<int>, S:int)
   exists I:multiset<int> | I <= A :: GSumInt(I) == S
 }
 
-
-
-method {:verify false} checkSuma(A:multiset<int>, S:int, I:multiset<int>) returns (b:bool)
+method {:verify true} checkSumaInt(A:multiset<int>, S:int, I:multiset<int>) returns (b:bool)
 ensures b == (I <= A && GSumInt(I) == S)
-{ var I' := I;
-  var suma := 0; var e:int; 
-  b := I <= A;
-  
-  while |I'| > 0
-  decreases |I'|
-  invariant I' <= I
-  invariant suma == GSumInt(I - I')
-   { 
-     e := minInt(I');
-     assume suma + e == GSumInt(I - (I'-multiset{e}));
-     suma := suma + e;
-     I' := I' - multiset{e};
-   }
-  assert suma == GSumInt(I); 
-  b := b && suma == S; 
+{ 
+  var suma := mSumaInt(I);
+  b := I <= A && suma == S; 
+
 }

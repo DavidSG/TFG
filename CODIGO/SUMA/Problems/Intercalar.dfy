@@ -19,3 +19,23 @@ ghost predicate Intercalar(E:seq<nat>)
      && E1 + E2 == elements
      && GSumNat(E1) - GSumNat(E2) == 0
 }
+
+method {:verify true} checkIntercalar(E:seq<nat>, E1:multiset<nat>, E2:multiset<nat>) returns (b:bool)
+ensures b == (|E| == 0) || 
+             (   var elements:= multiset(E);true 
+              && |E| > 0
+              && E[0] in E1 && E1 <= elements 
+              && E2 <= elements              
+              && E1 + E2 == elements
+              && GSumInt(E1) - GSumInt(E2) == 0)
+{ 
+  var elements:= multiset(E);
+  var suma1 := mSumaInt(E1);
+  var suma2 := mSumaInt(E2);
+  b := |E| == 0 || 
+       (   E[0] in E1 
+        && E1 <= elements 
+        && E2 <= elements              
+        && E1 + E2 == elements
+        && suma1 - suma2 == 0);
+}

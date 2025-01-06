@@ -8,8 +8,10 @@ include "../Auxiliar/Sum.dfy"
 ghost predicate Envasar(A:multiset<nat>, E:nat, k:nat)
 { 
   exists I:multiset<multiset<nat>> :: 
-      forall e | e in I :: e <= A && GSumNat(e) <= E 
-   && |I| <= k && Union(I) == A
+   && |I| <= k 
+   && Union(I) == A
+   && forall e | e in I :: e <= A && GSumNat(e) <= E 
+    
 }
 
 ghost function Union (I:multiset<multiset<nat>>) : multiset<nat>
@@ -17,3 +19,8 @@ ghost function Union (I:multiset<multiset<nat>>) : multiset<nat>
   if I == multiset{} then multiset{}
   else var i :| i in I; i + Union(I-multiset{i})
 }
+
+method {:verify true} checkEnvasar(A:multiset<nat>, E:nat, k:nat, I:multiset<multiset<nat>>) returns (b:bool)
+ensures b ==(   |I| <= k 
+             && Union(I) == A
+             && forall e | e in I :: e <= A && GSumNat(e) <= E) 

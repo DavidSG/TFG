@@ -47,7 +47,7 @@ ensures FSumNat(m) == GSumNat(m)
   }
 }
 
-lemma {:induction m} FSumIntComputaGSumInt(m : multiset<int>)
+lemma {:induction m} FSumIntComputaGSumInt(m : multiset<nat>)
 ensures FSumInt(m) == GSumInt(m)
 {
   if m == multiset{} 
