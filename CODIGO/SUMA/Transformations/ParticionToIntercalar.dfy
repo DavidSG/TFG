@@ -15,6 +15,8 @@ function Particion_to_Intercalar (A:multiset<nat>) : (r:(seq<nat>))
     ([0] + multiset_to_seq(A))
 }
 
+lemma SumaMulticonjuntos(M1:multiset<nat>, M2:multiset<nat>)
+    ensures GSumNat(M1) + GSumNat(M2) == GSumNat(M1+M2)
 
 lemma Particion_Intercalar(A:multiset<nat>, S:nat)
   ensures var E := Particion_to_Intercalar(A);
@@ -29,18 +31,35 @@ lemma Particion_Intercalar1(A:multiset<nat>)
           Particion(A) <== Intercalar(E)
 {   
     var E := Particion_to_Intercalar(A);
-    // IE = {1, 2, 4}, IS = 6, IT = 7
+    // E = {0, 1, 2, 4}
     if (Intercalar(E)) {
-        var elements := multiset(E);
-        var E1,E2 : multiset :| 
-            E[0] in E1 && E1 <= elements    // E1 positive elements
-            && E2 <= elements               // E2 negative elements
-            && E1 + E2 == elements
-            && GSumInt(E1) - GSumInt(E2) == 0;
+        if (|E| == 0) {
+            var P1 := multiset{}; var P2 := multiset{};
+            assert P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2);
+        }
+        else {
+            var elements:multiset<nat> := multiset(E);
+            var E1:multiset<nat>, E2:multiset<nat> :| 
+                E[0] in E1 && E1 <= elements    // E1 positive elements
+                && E2 <= elements               // E2 negative elements
+                && E1 + E2 == elements
+                && GSumNat(E1) - GSumNat(E2) == 0;
+            
+            
+            var P1:multiset<nat> := E1 - multiset{0};
+            var P2:multiset<nat> := E2;
+            
+            // Demostracion 1: E - 0 == A
+            assume [0] + multiset_to_seq(A) == E;
+            assume multiset{0} + A == elements;
 
-        E1 := E1 - multiset{E[0]};
-
-        assert E1 <= A && E2 <= A && E1 + E2 == A && GSumNat(E1) == GSumNat(E2);
+            // Demostracion 2: Sum(P1) = Sum (E1-0)
+            assert E1 == P1 + multiset{0}; SumaMulticonjuntos(P1,multiset{0});
+            assert GSumNat(E1) == GSumNat(P1) + GSumNat(multiset{0});
+            
+            assert P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2);
+        }
+        
     }
 }
 
@@ -48,19 +67,28 @@ lemma Particion_Intercalar2(A:multiset<nat>)
     ensures var E := Particion_to_Intercalar(A);
           Particion(A) ==> Intercalar(E)
 {
-    // A = {1, 2, 4}, S = 6
+    // A = {1, 2, 3},
     if (Particion(A)) {
-
         var P1:multiset<nat>, P2:multiset<nat> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2); // {1,2} {3}
 
-        
         var E := Particion_to_Intercalar(A);
-        P1 := P1 + multiset{E[0]};
         var elements := multiset(E);
-        //assert A == elements - multiset{E[0]};
-        assert E[0] in P1 && P1 <= elements //E1 positive elements
-            && P2 <= elements               //E2 negative elements
-            && P1 + P2 == elements
-            && GSumInt(P1) - GSumInt(P2) == 0;
+
+        var E1:multiset<nat> := multiset{0} + P1;
+        var E2:multiset<nat> := P2;
+
+        // Demostracion 1: A + 0 = E
+        assume [0] + multiset_to_seq(A) == E;
+        assume multiset{0} + A == elements;
+
+        // Demostracion 2: Sum(E1) = Sum (0+P1)
+        assert E1 == P1 + multiset{0}; SumaMulticonjuntos(P1,multiset{0});
+        assert GSumNat(E1) == GSumNat(P1) + GSumNat(multiset{0});
+          
+        assert  E[0] in E1 
+                && E1 <= elements //E1 elementos positivos
+                && E2 <= elements //E2 elementos negativos
+                && E1 + E2 == elements
+                && GSumNat(E1) == GSumNat(E2);
     }
 }

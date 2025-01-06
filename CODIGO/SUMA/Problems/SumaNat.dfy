@@ -5,7 +5,7 @@ include "../Auxiliar/Sum.dfy"
 // S, si podemos encontrar un subconjunto I del conjunto de índices del vector tal que la suma de
 // los correspondientes elementos del mismo sea S
 
-ghost predicate Suma(A:multiset<nat>, S:nat)
+ghost predicate SumaNat(A:multiset<nat>, S:nat)
 {
   exists I:multiset<nat> | I <= A :: GSumNat(I) == S
 }
