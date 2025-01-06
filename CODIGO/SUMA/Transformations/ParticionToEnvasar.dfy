@@ -33,6 +33,8 @@ lemma Particion_Envasar1(A:multiset<nat>)
         var P2:multiset<nat> :| P2 in C; // P2 = {3}
 
         assert P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2);
+
+        
      /*var C:multiset<multiset<nat>> :|
         && |C| <= Ek 
         && Union(C) == EA
@@ -64,10 +66,19 @@ lemma  Particion_Envasar2(A:multiset<nat>)
 
         var P1:multiset<nat>, P2:multiset<nat> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2); // {1,2} {3}
         var C: multiset<multiset<nat>> := multiset{P1, P2}; // { {1,2}, {3}}
-        FSumNatComputaGSumNat(EA);
-        GSumNatPartes(EA, P1, P2);
 
-        assert |C| <= Ek && Union(C) == A && forall e | e in C :: e <= A && GSumNat(e) <= EE;
+        // Demostracion 1 : Union(C) == EA
+        assume Union(C) == EA;
+
+        // Demostracion 2 : forall e | e in C :: e <= EA && GSumNat(e) <= EE;
+        // P1 <= EA && P2 <= EA && C = {P1,P2}
+        assert P1 <= EA && P2 <= EA;
+
+        // GSumNat(P1) <= EE && GSumNat(P2) <= EE
+        FSumNatComputaGSumNat(A); // FSumInt(A)/2 && FSumInt(A) == GSumInt(A)(Funcion) => GSumInt(A)/2 == EE => GSumInt(A) = 2*EE
+        GSumNatPartes(A,P1,P2); // Sum(A) = Sum (P1+P2)(Funcion) && Sum(P1) == Sum (P2) && Sum(A) = 2*EE => P1 == P2 == EE
+
+        assert |C| <= Ek && Union(C) == EA && forall e | e in C :: e <= EA && GSumNat(e) <= EE;
 
         /*
         //assume P1 <= A && P2 <= A && GSumNat(P1) <= EE && GSumNat(P2) <= EE && |C| <= Ek && P1 + P2 == A;

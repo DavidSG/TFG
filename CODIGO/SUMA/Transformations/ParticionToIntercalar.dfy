@@ -86,8 +86,8 @@ lemma Particion_Intercalar2(A:multiset<nat>)
         var E1:multiset<nat> := multiset{0} + P1;
         var E2:multiset<nat> := P2;
 
-        // Demostracion 1: A + 0 = E
-        multiset_to_seqLemma(A);
+        // Demostracion 1: 0 + A = elements
+        multiset_to_seqLemma(A); // multiset([0] + multiset_to_seq(A)) == elements
 
         // Demostracion 2: Sum(E1) = Sum (0+P1)
         assert E1 == P1 + multiset{0}; SumaMulticonjuntos(P1,multiset{0});
