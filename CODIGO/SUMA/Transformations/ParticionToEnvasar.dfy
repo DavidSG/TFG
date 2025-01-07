@@ -4,6 +4,8 @@ include "../Problems/Envasar.dfy"
 
 function Particion_to_Envasar(A:multiset<nat>) : (r:(multiset<nat>, nat, nat))
 {
+    if (FSumNat(A) % 2 == 1) then (multiset{10}, 0, 0)
+    else
     var S := FSumNat(A)/2;
     (A,S,2)
 }
@@ -27,7 +29,12 @@ lemma Particion_Envasar1(A:multiset<nat>)
     if (Envasar(EA,EE,Ek)) {
         var C: multiset<multiset<nat>> :| forall e | e in C :: e <= EA && GSumNat(e) <= EE && |C| <= Ek && Union(C) == EA; // C = { {1,2}, {3} }
         
-        assume |C| > 2;
+        // Demostracion 1 : |C| == 2;
+        FSumNatComputaGSumNat(A);
+        assert A == EA;
+        assert GSumInt(EA) != 0 => GSumInt(EA) % 2 == 0;
+
+        assume |C| == 2;
         var P1:multiset<nat> :| P1 in C; // P1 = {1,2}
         C := C - multiset{P1}; 
         var P2:multiset<nat> :| P2 in C; // P2 = {3}
