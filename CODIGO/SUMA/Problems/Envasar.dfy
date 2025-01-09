@@ -10,7 +10,7 @@ ghost predicate Envasar(A:multiset<nat>, E:nat, k:nat)
   exists I:multiset<multiset<nat>> :: 
    && |I| <= k 
    && Union(I) == A
-   && forall e | e in I :: e <= A && GSumNat(e) <= E 
+   && forall e | e in I :: (e <= A && GSumNat(e) <= E)
     
 }
 

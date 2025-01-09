@@ -10,6 +10,7 @@ function Particion_to_Envasar(A:multiset<nat>) : (r:(multiset<nat>, nat, nat))
     (A,S,2)
 }
 
+
 lemma Particion_Envasar(A:multiset<nat>)
   ensures var (EA,EE,Ek) := Particion_to_Envasar(A);
           Particion(A) <==> Envasar(EA,EE,Ek)
@@ -27,19 +28,65 @@ lemma Particion_Envasar1(A:multiset<nat>)
     // EA = {1, 2, 3}, EE = 3, Ek = 2
     var (EA,EE,Ek) := Particion_to_Envasar(A);
     if (Envasar(EA,EE,Ek)) {
-        var C: multiset<multiset<nat>> :| forall e | e in C :: e <= EA && GSumNat(e) <= EE && |C| <= Ek && Union(C) == EA; // C = { {1,2}, {3} }
-        
+     
         // Demostracion 1 : |C| == 2;
-        FSumNatComputaGSumNat(A);
-        assert A == EA;
-        assert GSumInt(EA) != 0 => GSumInt(EA) % 2 == 0;
+        //FSumNatComputaGSumNat(A);
+        if (GSumNat(EA) == 0) { // |C| < 2
+            var P1:multiset<nat> := EA; var P2:multiset<nat> := multiset{};
+            assert P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2);
+        }
+        else { //|C| == 2;
+            var C: multiset<multiset<nat>> :| 
+            && |C| <= Ek 
+            && Union(C) == EA
+            && forall e | e in C :: (e <= EA && GSumNat(e) <= EE); // C = { {1,2}, {3} }
 
-        assume |C| == 2;
-        var P1:multiset<nat> :| P1 in C; // P1 = {1,2}
-        C := C - multiset{P1}; 
-        var P2:multiset<nat> :| P2 in C; // P2 = {3}
+            FSumNatComputaGSumNat(A); assert GSumNat(EA) % 2 == 0;
+            assert Union(C) == EA;
+            assert A == EA;
+            assert Ek == 2;
 
-        assert P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2);
+            /*assert GSumNat(EA) > 0;
+            assert Union(C) == EA;
+            assert |EA| > 0;
+            assert |C| > 0;
+            var P1:multiset<nat> :| P1 in C; // P1 = {1,2}
+            assert P1 <= EA;
+            assert GSumNat(P1) <= EE;
+            FSumNatComputaGSumNat(EA); assert EE == GSumNat(EA)/2;
+            assert EE > 0;
+            assert P1 < EA;
+            assert GSumNat(P1) != GSumNat(EA);
+            var AC:multiset<multiset<nat>> := C - multiset{P1}; 
+            assert |AC| > 0;
+            var P2:multiset<nat> :| P2 in AC; // P2 = {3}
+            assert |C| == Ek == 2;
+            assert P1 in C && P2 in C;*/
+
+            //assume |C| == 0;
+            //assert P1 <= A && P2 <= A;
+            //assert P1 + P2 == A;
+            // GSumNat(P1) == GSumNat(P2);
+            //assume P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2);            
+
+            //Demostracion 1: Demostrar que |C| > 0
+            assert |C| > 0;
+            var P1:multiset<nat> :| P1 in C; // P1 = {1,2}
+            C := C - multiset{P1};
+
+            //Demostracion 2: Demostrar que |C| > 0
+            FSumNatComputaGSumNat(EA);
+            assert P1 < EA; 
+            assert |C| > 0;
+            var P2:multiset<nat> :| P2 in C; // P2 = {3}
+            C := C - multiset{P2};
+            assert |C| == 0;
+            
+            assume P1 <= A && P2 <= A && P1 + P2 == A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2);
+
+            //Demostracion 3: P1 + P2 == A
+        }
+        
 
         
      /*var C:multiset<multiset<nat>> :|
@@ -76,6 +123,7 @@ lemma  Particion_Envasar2(A:multiset<nat>)
 
         // Demostracion 1 : Union(C) == EA
         assume Union(C) == EA;
+        //assume Union(C) == EA;
 
         // Demostracion 2 : forall e | e in C :: e <= EA && GSumNat(e) <= EE;
         // P1 <= EA && P2 <= EA && C = {P1,P2}
