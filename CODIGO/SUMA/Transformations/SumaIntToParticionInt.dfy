@@ -3,28 +3,28 @@ include "../Problems/SumaInt.dfy"
 include "../Problems/ParticionInt.dfy"
 
 
-function Suma_to_Particion(A:multiset<int>, S:int) : (r:(multiset<int>))
+function SumaInt_to_ParticionInt(A:multiset<int>, S:int) : (r:(multiset<int>))
 {
     var N := 2*S - FSumInt(A);
     (A + multiset{N})
 }
 
-lemma Suma_Particion(A:multiset<int>, S:int)
-  ensures var PA := Suma_to_Particion(A, S);
-          SumaInt(A,S) <==> Particion(PA)
+lemma SumaInt_ParticionInt(A:multiset<int>, S:int)
+  ensures var PA := SumaInt_to_ParticionInt(A, S);
+          SumaInt(A,S) <==> ParticionInt(PA)
 { 
-    Suma_Particion1(A,S);
-    Suma_Particion2(A,S);
+    SumaInt_ParticionInt1(A,S);
+    SumaInt_ParticionInt2(A,S);
 }
 
-lemma Suma_Particion1(A:multiset<int>, S:int)
-    ensures var PA := Suma_to_Particion(A, S);
-          SumaInt(A,S) <== Particion(PA)
+lemma SumaInt_ParticionInt1(A:multiset<int>, S:int)
+    ensures var PA := SumaInt_to_ParticionInt(A, S);
+          SumaInt(A,S) <== ParticionInt(PA)
 {   
-    var PA := Suma_to_Particion(A,S);
+    var PA := SumaInt_to_ParticionInt(A,S);
     // PA = {1, 2, 3, 4, 2(N)}   
     // S = 6
-    if (Particion(PA)) {
+    if (ParticionInt(PA)) {
         var N := 2*S - GSumInt(A); // N = 2
         var PA' := PA - multiset{N}; // {1, 2, 3, 4} 
         FSumIntComputaGSumInt(A); FSumIntComputaGSumInt(PA);
@@ -39,13 +39,13 @@ lemma Suma_Particion1(A:multiset<int>, S:int)
     }
 }
 
-lemma Suma_Particion2(A:multiset<int>, S:int)
-    ensures var PA := Suma_to_Particion(A, S);
-          SumaInt(A,S) ==> Particion(PA)
+lemma SumaInt_ParticionInt2(A:multiset<int>, S:int)
+    ensures var PA := SumaInt_to_ParticionInt(A, S);
+          SumaInt(A,S) ==> ParticionInt(PA)
 {
     // A = {1, 2, 3, 4}, S = 6
     if (SumaInt(A,S)) {
-        var PA := Suma_to_Particion(A, S);
+        var PA := SumaInt_to_ParticionInt(A, S);
         var N := 2*S - GSumInt(A); // N = 2
         FSumIntComputaGSumInt(A); FSumIntComputaGSumInt(PA);
         GSumIntPartes(PA,A,multiset{N}); // PA == A + N;

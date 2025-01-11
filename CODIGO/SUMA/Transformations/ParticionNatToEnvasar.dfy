@@ -2,7 +2,7 @@ include "../Auxiliar/Sum.dfy"
 include "../Problems/ParticionNat.dfy"
 include "../Problems/Envasar.dfy"
 
-function Particion_to_Envasar(A:multiset<nat>) : (r:(multiset<nat>, nat, nat))
+function ParticionNat_to_Envasar(A:multiset<nat>) : (r:(multiset<nat>, nat, nat))
 {
     if (FSumNat(A) % 2 == 1) then (multiset{10}, 0, 0)
     else
@@ -11,22 +11,22 @@ function Particion_to_Envasar(A:multiset<nat>) : (r:(multiset<nat>, nat, nat))
 }
 
 
-lemma Particion_Envasar(A:multiset<nat>)
-  ensures var (EA,EE,Ek) := Particion_to_Envasar(A);
-          Particion(A) <==> Envasar(EA,EE,Ek)
+lemma ParticionNat_Envasar(A:multiset<nat>)
+  ensures var (EA,EE,Ek) := ParticionNat_to_Envasar(A);
+          ParticionNat(A) <==> Envasar(EA,EE,Ek)
 { 
-    Particion_Envasar1(A);
-    Particion_Envasar2(A);
+    ParticionNat_Envasar1(A);
+    ParticionNat_Envasar2(A);
 }
 
 
-lemma Particion_Envasar1(A:multiset<nat>)
-    ensures var (EA,EE,Ek) := Particion_to_Envasar(A);
-          Particion(A) <== Envasar(EA,EE,Ek)
+lemma ParticionNat_Envasar1(A:multiset<nat>)
+    ensures var (EA,EE,Ek) := ParticionNat_to_Envasar(A);
+          ParticionNat(A) <== Envasar(EA,EE,Ek)
 {   
     // A = {1, 2, 3}
     // EA = {1, 2, 3}, EE = 3, Ek = 2
-    var (EA,EE,Ek) := Particion_to_Envasar(A);
+    var (EA,EE,Ek) := ParticionNat_to_Envasar(A);
     if (Envasar(EA,EE,Ek)) {
      
         // Demostracion 1 : |C| == 2;
@@ -121,13 +121,13 @@ lemma {:axiom} DosMultisets(A:multiset<multiset<nat>>, P1:multiset<nat>, P2:mult
     requires A == multiset{P1,P2}
     ensures Union(A) == P1 + P2
 
-lemma  Particion_Envasar2(A:multiset<nat>)
-    ensures var (EA,EE,Ek) := Particion_to_Envasar(A);
-          Particion(A) ==> Envasar(EA,EE,Ek)
+lemma  ParticionNat_Envasar2(A:multiset<nat>)
+    ensures var (EA,EE,Ek) := ParticionNat_to_Envasar(A);
+          ParticionNat(A) ==> Envasar(EA,EE,Ek)
 {
     // A = {1, 2, 3}
-    if (Particion(A)) {
-        var (EA,EE,Ek) := Particion_to_Envasar(A);
+    if (ParticionNat(A)) {
+        var (EA,EE,Ek) := ParticionNat_to_Envasar(A);
 
         var P1:multiset<nat>, P2:multiset<nat> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2); // {1,2} {3}
         var C: multiset<multiset<nat>> := multiset{P1,P2}; // { {1,2}, {3}}

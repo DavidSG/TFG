@@ -4,7 +4,7 @@ include "../Problems/SumaInt.dfy"
 
 
 
-function Particion_to_SumaInt(A:multiset<int>) : (r:(multiset<int>, int))
+function ParticionInt_to_SumaInt(A:multiset<int>) : (r:(multiset<int>, int))
 {
     
     if FSumInt(A) % 2 == 1 then (multiset{}, 10)
@@ -13,19 +13,19 @@ function Particion_to_SumaInt(A:multiset<int>) : (r:(multiset<int>, int))
     (A, S)
 }
 
-lemma Particion_Suma(A:multiset<int>)
-  ensures var (SA,SS) := Particion_to_SumaInt(A);
-          Particion(A) <==> SumaInt(SA,SS)
+lemma ParticionInt_Suma(A:multiset<int>)
+  ensures var (SA,SS) := ParticionInt_to_SumaInt(A);
+          ParticionInt(A) <==> SumaInt(SA,SS)
 { 
-    Particion_Suma1(A);
-    Particion_Suma2(A);
+    ParticionInt_Suma1(A);
+    ParticionInt_Suma2(A);
 }
 
-lemma Particion_Suma1(A:multiset<int>)
-    ensures var (SA,SS) := Particion_to_SumaInt(A);
-          Particion(A) <== SumaInt(SA,SS)
+lemma ParticionInt_Suma1(A:multiset<int>)
+    ensures var (SA,SS) := ParticionInt_to_SumaInt(A);
+          ParticionInt(A) <== SumaInt(SA,SS)
 {   
-    var (SA,SS) := Particion_to_SumaInt(A);
+    var (SA,SS) := ParticionInt_to_SumaInt(A);
     // A = {1,2,3}
     // SA = {1,2,3} SS = 3
     if (SumaInt(SA,SS)) {
@@ -43,19 +43,19 @@ lemma Particion_Suma1(A:multiset<int>)
 }
 
 
-lemma Particion_Suma2(A:multiset<int>)
-    ensures var (SA,SS) := Particion_to_SumaInt(A);
-          Particion(A) ==> SumaInt(SA,SS)
+lemma ParticionInt_Suma2(A:multiset<int>)
+    ensures var (SA,SS) := ParticionInt_to_SumaInt(A);
+          ParticionInt(A) ==> SumaInt(SA,SS)
 {
     // A = {1, 2, 3}
-    if (Particion(A)) {
+    if (ParticionInt(A)) {
         if (GSumInt(A) % 2 == 1) {
-            var (SA,SS) := Particion_to_SumaInt(A);
+            var (SA,SS) := ParticionInt_to_SumaInt(A);
             var S:multiset<int> := multiset{};
             assume S <= SA && GSumInt(S) == SS;
         }
         else {
-            var (SA,SS) := Particion_to_SumaInt(A);
+            var (SA,SS) := ParticionInt_to_SumaInt(A);
             var P1:multiset<int>, P2:multiset<int> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumInt(P1) == GSumInt(P2); // {1,2} {3}
 
             var S:multiset<int> := P1;

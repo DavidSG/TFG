@@ -18,7 +18,7 @@ lemma multiset_to_seqLemma (A:multiset<nat>)
     assert A == SA;
 }
 
-function Particion_to_Intercalar (A:multiset<nat>) : (r:(seq<nat>))
+function ParticionNat_to_Intercalar (A:multiset<nat>) : (r:(seq<nat>))
 {
     ([0] + multiset_to_seq(A))
 }
@@ -27,19 +27,19 @@ function Particion_to_Intercalar (A:multiset<nat>) : (r:(seq<nat>))
 lemma SumaMulticonjuntos(M1:multiset<nat>, M2:multiset<nat>)
     ensures GSumNat(M1) + GSumNat(M2) == GSumNat(M1+M2)
 
-lemma Particion_Intercalar(A:multiset<nat>, S:nat)
-  ensures var E := Particion_to_Intercalar(A);
-          Particion(A) <==> Intercalar(E)
+lemma ParticionNat_Intercalar(A:multiset<nat>, S:nat)
+  ensures var E := ParticionNat_to_Intercalar(A);
+          ParticionNat(A) <==> Intercalar(E)
 { 
-    Particion_Intercalar1(A);
-    Particion_Intercalar2(A);
+    ParticionNat_Intercalar1(A);
+    ParticionNat_Intercalar2(A);
 }
 
-lemma Particion_Intercalar1(A:multiset<nat>)
-    ensures var E := Particion_to_Intercalar(A);
-          Particion(A) <== Intercalar(E)
+lemma ParticionNat_Intercalar1(A:multiset<nat>)
+    ensures var E := ParticionNat_to_Intercalar(A);
+          ParticionNat(A) <== Intercalar(E)
 {   
-    var E := Particion_to_Intercalar(A);
+    var E := ParticionNat_to_Intercalar(A);
     // E = {0, 1, 2, 3}
     if (Intercalar(E)) {
         if (|E| < 2) {
@@ -72,15 +72,15 @@ lemma Particion_Intercalar1(A:multiset<nat>)
     }
 }
 
-lemma Particion_Intercalar2(A:multiset<nat>)
-    ensures var E := Particion_to_Intercalar(A);
-          Particion(A) ==> Intercalar(E)
+lemma ParticionNat_Intercalar2(A:multiset<nat>)
+    ensures var E := ParticionNat_to_Intercalar(A);
+          ParticionNat(A) ==> Intercalar(E)
 {
     // A = {1, 2, 3},
-    if (Particion(A)) {
+    if (ParticionNat(A)) {
         var P1:multiset<nat>, P2:multiset<nat> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2); // {1,2} {3}
 
-        var E := Particion_to_Intercalar(A);
+        var E := ParticionNat_to_Intercalar(A);
         var elements := multiset(E);
 
         var E1:multiset<nat> := multiset{0} + P1;
