@@ -2,7 +2,6 @@ include "../Auxiliar/Sum.dfy"
 include "../Problems/SumaNat.dfy"
 include "../Problems/SumaInt.dfy"
 
-
 function SumaNat_to_SumaInt(A:multiset<nat>, S:nat) : (r:(multiset<int>,int))
 {
     (A,S)
@@ -22,13 +21,13 @@ lemma SumaNat_SumaInt1(A:multiset<nat>, S:nat)
 {   
     var (SA, SS) := SumaNat_to_SumaInt(A, S);
     if (SumaInt(SA,SS)) {
-        var C:multiset<int> :| C <= SA && GSumInt(C) == SS;
+        var CInt:multiset<int> :| CInt <= SA && GSumInt(CInt) == SS;
 
-        assert forall e | e in C :: e >= 0;
-        var CNat:multiset<nat> := C;
-        assume GSumNat(CNat) == GSumInt(CNat);
+        var CNat:multiset<nat> := CInt;
         
-        assert C <= A && GSumNat(C) == S;
+
+        SumNatEqualsSumInt(CNat, CInt);
+        assert CNat <= A && GSumNat(CNat) == S;
     }
 }
 
@@ -39,12 +38,11 @@ lemma SumaNat_SumaInt2(A:multiset<nat>, S:nat)
 
     if (SumaNat(A,S)) {
         var (SA, SS) := SumaNat_to_SumaInt(A, S);
-        var C:multiset<nat> :| C <= A && GSumNat(C) == S;
+        var CNat:multiset<nat> :| CNat <= A && GSumNat(CNat) == S;
 
-        var CInt:multiset<int> := C;
-        assert C == CInt;
-        assume GSumNat(C) == GSumInt(CInt); 
+        var CInt:multiset<int> := CNat;
         
+        SumNatEqualsSumInt(CNat, CInt);
         assert CInt <= SA && GSumInt(CInt) == SS;
     }
 }

@@ -198,3 +198,52 @@ ensures s == GSumInt(A)
   assert A' == multiset{} && A - A' == A;
   assert s == GSumInt(A);
 }
+
+
+// TRANSFORMACION DE TIPOS MULTISETS (MULTISET<INT> A MULTISET<NAT>)
+
+/*function multisetNatToInt(A : multiset<nat>) : (r:(multiset<int>))
+    requires forall e | e in A :: e >= 0
+    ensures A == r;
+
+{
+    if A == multiset{} then multiset{}
+    else var i := minInt(A) as int; multiset{i} + multisetNatToInt(A-multiset{i})
+}
+
+
+lemma SumNatESumInt (A:multiset<nat>)
+    ensures GSumNat(A) == GSumInt(A);
+{
+    if (A == multiset{}) {
+        assert GSumNat(A) == GSumInt(A);
+    }
+    else {
+        var ai := minNat(A);
+        assert ai == ai as int; SumNatESumInt(A-multiset{ai});
+        GSumNatPartes(A,multiset{ai},A-multiset{ai}); GSumIntPartes(A,multiset{ai},A-multiset{ai});
+
+        assert GSumNat(A) == GSumInt(A);
+         
+    }
+}
+*/
+
+lemma SumNatEqualsSumInt (A:multiset<nat>, B: multiset<int>)
+    requires A == B
+    ensures GSumNat(A) == GSumInt(B)
+{   
+    if (A == multiset{}) {
+        assert B == multiset{};
+        assert GSumNat(A) == GSumInt(B);
+    }
+    else {
+        var ai := minNat(A);
+        var bi := minInt(B);
+        SumNatEqualsSumInt(A-multiset{ai}, B-multiset{bi});
+        assert ai == bi && GSumNat(A-multiset{ai}) == GSumInt(B-multiset{bi}); 
+        GSumNatPartes(A,multiset{ai},A-multiset{ai}); GSumIntPartes(B,multiset{bi},B-multiset{bi});
+        assert GSumNat(A) == GSumInt(B);
+         
+    }
+}
