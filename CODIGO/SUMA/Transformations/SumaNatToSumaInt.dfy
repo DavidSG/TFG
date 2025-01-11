@@ -24,10 +24,11 @@ lemma SumaNat_SumaInt1(A:multiset<nat>, S:nat)
     if (SumaInt(SA,SS)) {
         var C:multiset<int> :| C <= SA && GSumInt(C) == SS;
 
-        var CNat:multiset<nat> := C;
         assert forall e | e in C :: e >= 0;
+        var CNat:multiset<nat> := C;
+        assume GSumNat(CNat) == GSumInt(CNat);
         
-        assert CNat <= A && GSumNat(CNat) == S;
+        assert C <= A && GSumNat(C) == S;
     }
 }
 
@@ -41,6 +42,8 @@ lemma SumaNat_SumaInt2(A:multiset<nat>, S:nat)
         var C:multiset<nat> :| C <= A && GSumNat(C) == S;
 
         var CInt:multiset<int> := C;
+        assert C == CInt;
+        assume GSumNat(C) == GSumInt(CInt); 
         
         assert CInt <= SA && GSumInt(CInt) == SS;
     }
