@@ -159,9 +159,25 @@ lemma GSumNatPartes(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>)
     var i := minNat(A);
     if (i in P1) {
       GSumNatPartes(A - multiset{i}, P1 - multiset{i}, P2);
+      //GSumNatPartes(A, A - multiset{i}, multiset{i});
       assert GSumNat(A - multiset{i}) == GSumNat(P1 - multiset{i}) + GSumNat(P2);
-      assert GSumNat(A - multiset{i}) + i == GSumNat(P1 - multiset{i}) + i + GSumNat(P2);
-      assume GSumNat(A) == GSumNat(P1) + GSumNat(P2);
+      assert GSumNat(multiset{i}) == i;
+      assert GSumNat(A - multiset{i}) + GSumNat(multiset{i}) == GSumNat(P1 - multiset{i}) + GSumNat(multiset{i})  + GSumNat(P2);
+
+      //assert A-multiset{i} <= A && multiset{i} <= A && A-multiset{i} + multiset{i} == A; 
+      //assert A - multiset{i} + multiset{i} == A;
+      assert A + multiset{i} == A + multiset{i};
+      assert A == A;
+      assert A - multiset{i} == A - multiset{i};
+      assert A == A + multiset{i} - multiset{i};
+
+      assert i in A;
+      assert i in multiset{i};
+      assert multiset{i} * A == multiset{i};
+      //assert A == A - multiset{i} + multiset{i};
+      //GSumNatPartes(A, A - multiset{i}, multiset{i});
+      assume GSumNat(A) == GSumNat(A-multiset{i}) + GSumNat(multiset{i});
+      assert GSumNat(A) == GSumNat(P1) + GSumNat(P2);
     }
     else {
       //assert i in A && i in P2 && i == i;
