@@ -149,7 +149,29 @@ ghost function GSumNat(m: multiset<nat>) : nat
 lemma GSumNatPartes(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>)
     requires P1 <= A && P2 <= A && P1 + P2 == A 
     ensures GSumNat(A) == GSumNat(P1) + GSumNat(P2)
-//Por induccion 
+{
+  if (A == multiset{}) {
+    assert P1 == multiset{};
+    assert P2 == multiset{};
+    assert GSumNat(A) == GSumNat(P1) + GSumNat(P2);
+  }
+  else {
+    var i := minNat(A);
+    if (i in P1) {
+      GSumNatPartes(A - multiset{i}, P1 - multiset{i}, P2);
+      assert GSumNat(A - multiset{i}) == GSumNat(P1 - multiset{i}) + GSumNat(P2);
+      assert GSumNat(A - multiset{i}) + i == GSumNat(P1 - multiset{i}) + i + GSumNat(P2);
+      assume GSumNat(A) == GSumNat(P1) + GSumNat(P2);
+    }
+    else {
+      //assert i in A && i in P2 && i == i;
+      //GSumNatPartes(A - multiset{i}, P1, P2 - multiset{i});
+      //assert GSumNat(A) == GSumNat(P1) + GSumNat(P2);
+      assume GSumNat(A) == GSumNat(P1) + GSumNat(P2);
+    }
+    //assume GSumNat(A) == GSumNat(P1) + GSumNat(P2);
+  }
+}
 
 lemma GSumIntPartes(A:multiset<int>, P1:multiset<int>, P2:multiset<int>)
     requires P1 <= A && P2 <= A && P1 + P2 == A 
