@@ -199,7 +199,6 @@ lemma GSumIntPartes(A:multiset<int>, P1:multiset<int>, P2:multiset<int>)
 
       // Demostracion 2 : Sum(A) == i + Sum(A-i) 
       assume GSumInt(A) == i + GSumInt(A - multiset{i});
-      assert GSumInt(A) == GSumInt(multiset{i}) + GSumInt(A - multiset{i});
 
       // Demostracion 3 : Sum(P1) == i + Sum(P1-i) 
       assume GSumInt(P1) == i + GSumInt(P1 - multiset{i});
