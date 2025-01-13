@@ -163,6 +163,13 @@ lemma GSumNatPartes(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>)
       assert GSumNat(A - multiset{i}) == GSumNat(P1 - multiset{i}) + GSumNat(P2);
       assert GSumNat(multiset{i}) == i;
       assert GSumNat(A - multiset{i}) + GSumNat(multiset{i}) == GSumNat(P1 - multiset{i}) + GSumNat(multiset{i})  + GSumNat(P2);
+      
+      assert GSumNat(A - multiset{i as nat}) == GSumNat(A - multiset{i as nat});
+      assert GSumNat(multiset{i as nat}) == GSumNat(multiset{i as nat}) == i;
+      assert GSumNat(A - multiset{i as nat}) + GSumNat(multiset{i as nat}) == GSumNat(A - multiset{i as nat}) + GSumNat(multiset{i as nat});
+      //assert GSumNat(A - multiset{i as nat}) + GSumNat(multiset{i as nat}) == 
+              //GSumNat(P1 - multiset{i}) + GSumNat(P2) + GSumNat(multiset{i as nat});
+      //assert GSumNat(A - multiset{i as nat}) + GSumNat(multiset{i as nat}) == GSumNat(multiset{i as nat}) + GSumNat(A - multiset{i as nat});
 
       //assert A-multiset{i} <= A && multiset{i} <= A && A-multiset{i} + multiset{i} == A; 
       //assert A - multiset{i} + multiset{i} == A;
@@ -192,7 +199,34 @@ lemma GSumNatPartes(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>)
 lemma GSumIntPartes(A:multiset<int>, P1:multiset<int>, P2:multiset<int>)
     requires P1 <= A && P2 <= A && P1 + P2 == A 
     ensures GSumInt(A) == GSumInt(P1) + GSumInt(P2)
-//Por induccion 
+{
+  if (A == multiset{}) {
+    assert P1 == multiset{};
+    assert P2 == multiset{};
+    assert GSumInt(A) == GSumInt(P1) + GSumInt(P2);
+  }
+  else {
+    var i := minInt(A);
+    if (i in P1) {
+      GSumIntPartes(A - multiset{i}, P1 - multiset{i}, P2);
+      assert GSumInt(A - multiset{i}) == GSumInt(P1 - multiset{i}) + GSumInt(P2);
+
+      //GSumIntPartes(A, A - multiset{i}, multiset{i});
+      assume GSumInt(A) == GSumInt(A - multiset{i}) + GSumInt(multiset{i});
+
+      //GSumIntPartes(A, A - multiset{i}, multiset{i});
+      assume GSumInt(P1) == GSumInt(P1 - multiset{i}) + GSumInt(multiset{i});
+
+
+      assert GSumInt(A) == GSumInt(P1) + GSumInt(P2);
+    }
+    else {
+      GSumIntPartes(A - multiset{i}, P1, P2 - multiset{i});
+      assume GSumInt(A) == GSumInt(P1) + GSumInt(P2);
+    }
+
+  }
+}
 
 
 method {:verify true} mSumaNat(A:multiset<nat>) returns (s:nat)
