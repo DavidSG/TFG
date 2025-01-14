@@ -94,13 +94,20 @@ lemma ParticionInt_ParticionNat2(A:multiset<int>)
         
         assert P1Positivo <= P1 && P1Negativo <= P1 && P2Positivo <= P2 && P2Negativo <= P2;
         assert P1Positivo <= A && P1Negativo <= A && P2Positivo <= A && P2Negativo <= A;
-
-        assert PA == MultisetAbs(A);
+        
+        // Demostracion 1: Podemos obtener PA de los conjuntos anteriores
+        // Definimos que es PA
         assume PA == PositiveElements(A) + MultisetNegToPos(NegativeElements(A));
+    
         assert P1Positivo <= A && P1Positivo <= PositiveElements(A);
-        assert P1Positivo <= PA && P2Positivo <= PA;
-        //
-        assert MultisetNegToPos(P1Negativo) <= PA && MultisetNegToPos(P2Negativo) <= PA;
+
+        assert P1Positivo <= PA && P2Positivo <= PA; // IMPORTANTE
+        assert P1Negativo <= A && P1Negativo <= NegativeElements(A);
+        assert P1Negativo <= NegativeElements(A);
+        assert MultisetNegToPos(NegativeElements(A)) <= PA;
+        assume P1Negativo + P2Positivo == NegativeElements(A);
+        //assert MultisetNegToPos(P1) <= MultisetNegToPos(NegativeElements(A));
+        //assert MultisetNegToPos(P1Negativo) <= PA && MultisetNegToPos(P2Negativo) <= PA;
 
         var NP1 := P1Positivo + MultisetAbs(P2Negativo); var NP2 := P2Positivo + MultisetAbs(P1Negativo);
 
