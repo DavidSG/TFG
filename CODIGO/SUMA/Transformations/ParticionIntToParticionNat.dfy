@@ -103,6 +103,14 @@ lemma ParticionInt_ParticionNat1(A:multiset<int>)
     }
 }
 
+lemma FPosComputeGPos(A:multiset<int>)
+    ensures FPositiveElements(A) == GPositiveElements(A)
+
+lemma FNegComputeGNeg(A:multiset<int>)
+    ensures FNegativeElements(A) == GNegativeElements(A)
+
+lemma FNegToPosComputeGNegToPos(A:multiset<int>)
+    ensures FNegativeElements(A) == GNegativeElements(A)
 
 lemma ParticionInt_ParticionNat2(A:multiset<int>)
     ensures var PA := ParticionInt_to_ParticionNat(A);
@@ -116,9 +124,9 @@ lemma ParticionInt_ParticionNat2(A:multiset<int>)
         var NP2:multiset<int> := GPositiveElements(P2) + GMultisetNegToPos(GNegativeElements(P1));
 
         // Demostracion 1 :
-        //assume FPositiveElements(A) == GPositiveElements(A);
+        FPosComputeGPos(A);
         assert PA == FPositiveElements(A) + FMultisetNegToPos(FNegativeElements(A));
-        //assert PA == GPositiveElements(A) + FMultisetNegToPos(FNegativeElements(A));
+        assert PA == GPositiveElements(A) + FMultisetNegToPos(FNegativeElements(A));
         assume PAInt == GPositiveElements(A) + GMultisetNegToPos(GNegativeElements(A));
 
         assume GPositiveElements(A) == GPositiveElements(P1) + GPositiveElements(P2);
