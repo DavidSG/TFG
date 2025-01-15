@@ -2,32 +2,82 @@ include "../Auxiliar/Sum.dfy"
 include "../Problems/ParticionNat.dfy"
 include "../Problems/ParticionInt.dfy"
 
-function MultisetAbs(A:multiset<int>) : (r:(multiset<int>)) 
-ensures var Positivos:multiset<int> := PositiveElements(A); var Negativos:multiset<int> := NegativeElements(A);
-var AbsNegativos:multiset<int> := MultisetNegToPos(Negativos);
-Positivos <= A && Negativos <= A && Positivos + Negativos == A && Positivos <= r;
-ensures forall e | e in r :: e >= 0;
-{
-    if A == multiset{} then multiset{}
-    else 
-        var min := minInt(A);
-        if min >= 0 then (multiset{min} + MultisetAbs(A-multiset{min}))
-        else (multiset{-min} + MultisetAbs(A-multiset{min}))
-}
-
-function MultisetNegToPos(A:multiset<int>) : (r:(multiset<int>)) 
+function FMultisetNegToPos(A:multiset<int>) : (r:(multiset<int>)) 
 requires forall e | e in A :: e < 0;
 ensures forall e | e in A :: -e in r;
+ensures forall e | e in r :: e >= 0;
+ensures |A| == |r|;
 {
     if A == multiset{} then multiset{}
     else 
         var min := minInt(A);
-        (multiset{-min} + MultisetNegToPos(A-multiset{min}))
+        (multiset{-min} + FMultisetNegToPos(A-multiset{min}))
+}
+
+function GMultisetNegToPos(A:multiset<int>) : (r:(multiset<int>)) 
+requires forall e | e in A :: e < 0;
+ensures forall e | e in A :: -e in r;
+ensures forall e | e in r :: e >= 0;
+ensures |A| == |r|;
+{
+    if A == multiset{} then multiset{}
+    else 
+        var min := minInt(A);
+        (multiset{-min} + GMultisetNegToPos(A-multiset{min}))
+}
+
+function FPositiveElements(A:multiset<int>) : (r:(multiset<int>)) 
+ensures r <= A && forall e | e in r :: e >= 0;
+{  
+    if A == multiset{} then multiset{}
+    else 
+        var m := minInt(A);
+        if m >= 0 then 
+            (multiset{m} + FPositiveElements(A - multiset{m}))
+        else
+            (FPositiveElements(A - multiset{m}))
+}
+
+function FNegativeElements(A:multiset<int>) : (r:(multiset<int>)) 
+ensures r <= A && forall e | e in r :: e < 0;
+{  
+    if A == multiset{} then multiset{}
+    else 
+        var m := minInt(A);
+        if m < 0 then 
+            (multiset{m} + FNegativeElements(A - multiset{m}))
+        else
+            (FNegativeElements(A - multiset{m}))
+}
+
+ghost function GPositiveElements(A:multiset<int>) : (r:(multiset<int>)) 
+ensures r <= A && forall e | e in r :: e >= 0;
+{  
+    if A == multiset{} then multiset{}
+    else 
+        var m := minInt(A);
+        if m >= 0 then 
+            (multiset{m} + GPositiveElements(A - multiset{m}))
+        else
+            (GPositiveElements(A - multiset{m}))
+}
+
+ghost function GNegativeElements(A:multiset<int>) : (r:(multiset<int>)) 
+ensures r <= A && forall e | e in r :: e < 0;
+{  
+    if A == multiset{} then multiset{}
+    else 
+        var m := minInt(A);
+        if m < 0 then 
+            (multiset{m} + GNegativeElements(A - multiset{m}))
+        else
+            (GNegativeElements(A - multiset{m}))
 }
 
 function ParticionInt_to_ParticionNat(A:multiset<int>) : (r:(multiset<nat>))
 {   
-    var r: multiset<nat> := MultisetAbs(A);
+    var Aux: multiset<int> := FPositiveElements(A) + FMultisetNegToPos(FNegativeElements(A));
+    var r:multiset<nat> := Aux;
     (r)        
 }
 
@@ -39,29 +89,7 @@ lemma ParticionInt_ParticionNat(A:multiset<int>)
     ParticionInt_ParticionNat2(A);
 }
 
-ghost function PositiveElements(A:multiset<int>) : (r:(multiset<int>)) 
-ensures r <= A && forall e | e in r :: e >= 0;
-{  
-    if A == multiset{} then multiset{}
-    else 
-        var m := minInt(A);
-        if m >= 0 then 
-            (multiset{m} + PositiveElements(A - multiset{m}))
-        else
-            (PositiveElements(A - multiset{m}))
-}
 
-ghost function NegativeElements(A:multiset<int>) : (r:(multiset<int>)) 
-ensures r <= A && forall e | e in r :: e < 0;
-{  
-    if A == multiset{} then multiset{}
-    else 
-        var m := minInt(A);
-        if m < 0 then 
-            (multiset{m} + NegativeElements(A - multiset{m}))
-        else
-            (NegativeElements(A - multiset{m}))
-}
 
 lemma ParticionInt_ParticionNat1(A:multiset<int>)
     ensures var PA := ParticionInt_to_ParticionNat(A);
@@ -71,12 +99,9 @@ lemma ParticionInt_ParticionNat1(A:multiset<int>)
     if (ParticionNat(PA)) {
         var P1:multiset<nat>,P2:multiset<nat> :| P1 <= PA && P2 <= PA && P1 + P2 == PA && GSumNat(P1) == GSumNat(P2);
 
-        var ANeg:multiset<nat> := MultisetAbs(NegativeElements(A));
-        var P2Neg:multiset<nat> := P1*ANeg; var P1Neg:multiset<nat> := P2*ANeg;
+        var IP1:multiset<nat> := multiset{}; var IP2:multiset<nat> := multiset{}; 
 
-        var IP1:multiset<nat> := P1; var IP2:multiset<nat> := P2; 
-
-        assume IP1 <= A && IP2 <= A && IP1 + IP2 == A && GSumNat(IP1) == GSumNat(IP2);
+        assume IP1 <= A && IP2 <= A && IP1 + IP2 == A && GSumInt(IP1) == GSumInt(IP2);
     }
 }
 
@@ -89,27 +114,23 @@ lemma ParticionInt_ParticionNat2(A:multiset<int>)
         var PA := ParticionInt_to_ParticionNat(A);
         var P1:multiset<int>,P2:multiset<int> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumInt(P1) == GSumInt(P2);
 
-        var P1Positivo:multiset<int> := PositiveElements(P1); var P1Negativo:multiset<int> := NegativeElements(P1);
-        var P2Positivo:multiset<int> := PositiveElements(P2); var P2Negativo:multiset<int> := NegativeElements(P2);        
+        var P1Positivo:multiset<int> := GPositiveElements(P1); var P1Negativo:multiset<int> := GNegativeElements(P1);
+        var P2Positivo:multiset<int> := GPositiveElements(P2); var P2Negativo:multiset<int> := GNegativeElements(P2);        
         
-        assert P1Positivo <= P1 && P1Negativo <= P1 && P2Positivo <= P2 && P2Negativo <= P2;
-        assert P1Positivo <= A && P1Negativo <= A && P2Positivo <= A && P2Negativo <= A;
-        
-        // Demostracion 1: Podemos obtener PA de los conjuntos anteriores
-        // Definimos que es PA
-        assume PA == PositiveElements(A) + MultisetNegToPos(NegativeElements(A));
-    
-        assert P1Positivo <= A && P1Positivo <= PositiveElements(A);
+        var NP1 := P1Positivo + GMultisetNegToPos(P2Negativo); var NP2 := P2Positivo + GMultisetNegToPos(P1Negativo);
 
-        assert P1Positivo <= PA && P2Positivo <= PA; // IMPORTANTE
-        assert P1Negativo <= A && P1Negativo <= NegativeElements(A);
-        assert P1Negativo <= NegativeElements(A);
-        assert MultisetNegToPos(NegativeElements(A)) <= PA;
-        assume P1Negativo + P2Positivo == NegativeElements(A);
-        //assert MultisetNegToPos(P1) <= MultisetNegToPos(NegativeElements(A));
-        //assert MultisetNegToPos(P1Negativo) <= PA && MultisetNegToPos(P2Negativo) <= PA;
+        // Demostracion 1 : 
+        assume PA == GPositiveElements(A) + GMultisetNegToPos(GNegativeElements(A));
 
-        var NP1 := P1Positivo + MultisetAbs(P2Negativo); var NP2 := P2Positivo + MultisetAbs(P1Negativo);
+        assume GPositiveElements(P1) + GPositiveElements(P2) == GPositiveElements(A);
+        assume GMultisetNegToPos(GNegativeElements(P1)) + GMultisetNegToPos(GNegativeElements(P2)) == GMultisetNegToPos(GNegativeElements(A));
+
+        assert NP1 == GPositiveElements(P1) + GMultisetNegToPos(GNegativeElements(P2));
+        assert GPositiveElements(P1) <= GPositiveElements(A);
+        assert GPositiveElements(A) <= PA;
+
+        assert GMultisetNegToPos(GNegativeElements(P2)) <= GMultisetNegToPos(GNegativeElements(A));
+        assert GMultisetNegToPos(GNegativeElements(A)) <= PA;
 
         assume NP1 <= PA && NP2 <= PA && NP1 + NP2 == PA && GSumNat(NP1) == GSumNat(NP2);
     }
