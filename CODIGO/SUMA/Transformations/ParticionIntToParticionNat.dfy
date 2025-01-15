@@ -76,9 +76,7 @@ ensures r <= A && forall e | e in r :: e < 0;
 
 function ParticionInt_to_ParticionNat(A:multiset<int>) : (r:(multiset<nat>))
 {   
-    var Aux: multiset<int> := FPositiveElements(A) + FMultisetNegToPos(FNegativeElements(A));
-    var r:multiset<nat> := Aux;
-    (r)        
+    (FPositiveElements(A) + FMultisetNegToPos(FNegativeElements(A)))        
 }
 
 lemma ParticionInt_ParticionNat(A:multiset<int>)
@@ -111,26 +109,33 @@ lemma ParticionInt_ParticionNat2(A:multiset<int>)
           ParticionInt(A) ==> ParticionNat(PA)
 {
     if (ParticionInt(A)) {
-        var PA := ParticionInt_to_ParticionNat(A);
+        var PA:multiset<nat> := ParticionInt_to_ParticionNat(A); var PAInt:multiset<int> := PA;
         var P1:multiset<int>,P2:multiset<int> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumInt(P1) == GSumInt(P2);
-
-        var P1Positivo:multiset<int> := GPositiveElements(P1); var P1Negativo:multiset<int> := GNegativeElements(P1);
-        var P2Positivo:multiset<int> := GPositiveElements(P2); var P2Negativo:multiset<int> := GNegativeElements(P2);        
         
-        var NP1 := P1Positivo + GMultisetNegToPos(P2Negativo); var NP2 := P2Positivo + GMultisetNegToPos(P1Negativo);
+        var NP1:multiset<int> := GPositiveElements(P1) + GMultisetNegToPos(GNegativeElements(P2)); 
+        var NP2:multiset<int> := GPositiveElements(P2) + GMultisetNegToPos(GNegativeElements(P1));
 
-        // Demostracion 1 : 
-        assume PA == GPositiveElements(A) + GMultisetNegToPos(GNegativeElements(A));
+        // Demostracion 1 :
+        //assume FPositiveElements(A) == GPositiveElements(A);
+        assert PA == FPositiveElements(A) + FMultisetNegToPos(FNegativeElements(A));
+        //assert PA == GPositiveElements(A) + FMultisetNegToPos(FNegativeElements(A));
+        assume PAInt == GPositiveElements(A) + GMultisetNegToPos(GNegativeElements(A));
 
-        assume GPositiveElements(P1) + GPositiveElements(P2) == GPositiveElements(A);
-        assume GMultisetNegToPos(GNegativeElements(P1)) + GMultisetNegToPos(GNegativeElements(P2)) == GMultisetNegToPos(GNegativeElements(A));
+        assume GPositiveElements(A) == GPositiveElements(P1) + GPositiveElements(P2);
+        assume GMultisetNegToPos(GNegativeElements(A)) == GMultisetNegToPos(GNegativeElements(P1)) + GMultisetNegToPos(GNegativeElements(P2));
 
+        assume GPositiveElements(A) * GNegativeElements(A) == multiset{};
+
+        assert NP1 <= PAInt;
+        assert NP2 <= PAInt;
+        assert NP1 <= PAInt && NP2 <= PAInt; 
+
+        
         assert NP1 == GPositiveElements(P1) + GMultisetNegToPos(GNegativeElements(P2));
-        assert GPositiveElements(P1) <= GPositiveElements(A);
-        assert GPositiveElements(A) <= PA;
+        assert NP2 == GPositiveElements(P2) + GMultisetNegToPos(GNegativeElements(P1));
+        //assert NP1 + NP2 == PAInt;
 
-        assert GMultisetNegToPos(GNegativeElements(P2)) <= GMultisetNegToPos(GNegativeElements(A));
-        assert GMultisetNegToPos(GNegativeElements(A)) <= PA;
+        
 
         assume NP1 <= PA && NP2 <= PA && NP1 + NP2 == PA && GSumNat(NP1) == GSumNat(NP2);
     }
