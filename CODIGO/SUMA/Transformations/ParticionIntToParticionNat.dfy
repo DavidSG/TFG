@@ -125,7 +125,16 @@ lemma ParticionInt_ParticionNat1(A:multiset<int>)
         var PAInt:multiset<int> := PA;
         assert PAInt == GPositiveElements(A) + GMultisetNegToPos(GNegativeElements(A));
 
-        var IP1:multiset<nat> := multiset{}; var IP2:multiset<nat> := multiset{}; 
+        var NegativeA:multiset<int> := GMultisetNegToPos(GNegativeElements(A));
+
+        var Intersection:multiset<int> := P1*NegativeA; NegativeA := NegativeA - Intersection;
+        var P1Neg := Intersection; var P1Pos := P1 - P1Neg;
+
+        var P2Neg := NegativeA; 
+        //var P2Pos := P2 - P2Neg;
+        var P2Pos := multiset{};
+
+        var IP1:multiset<nat> := P1Pos + P2Neg; var IP2:multiset<nat> := P2Pos + P1Neg; 
 
         assume IP1 <= A && IP2 <= A && IP1 + IP2 == A && GSumInt(IP1) == GSumInt(IP2);
     }
