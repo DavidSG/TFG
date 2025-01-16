@@ -87,22 +87,6 @@ lemma ParticionInt_ParticionNat(A:multiset<int>)
     ParticionInt_ParticionNat2(A);
 }
 
-
-
-lemma ParticionInt_ParticionNat1(A:multiset<int>)
-    ensures var PA := ParticionInt_to_ParticionNat(A);
-          ParticionInt(A) <== ParticionNat(PA)
-{   
-    var PA := ParticionInt_to_ParticionNat(A);
-    if (ParticionNat(PA)) {
-        var P1:multiset<nat>,P2:multiset<nat> :| P1 <= PA && P2 <= PA && P1 + P2 == PA && GSumNat(P1) == GSumNat(P2);
-
-        var IP1:multiset<nat> := multiset{}; var IP2:multiset<nat> := multiset{}; 
-
-        assume IP1 <= A && IP2 <= A && IP1 + IP2 == A && GSumInt(IP1) == GSumInt(IP2);
-    }
-}
-
 lemma FPosComputeGPos(A:multiset<int>)
     ensures FPositiveElements(A) == GPositiveElements(A)
 
@@ -114,7 +98,8 @@ lemma FNegToPosComputeGNegToPos(A:multiset<int>)
     ensures FMultisetNegToPos(A) == GMultisetNegToPos(A)
 
 lemma Partes(A:multiset<int>)
-    ensures A == GPositiveElements(A) + GNegativeElements(A)
+    ensures A == GPositiveElements(A) + GNegativeElements(A) 
+            && GPositiveElements(A) * GNegativeElements(A) == multiset{}
 {
     if (A == multiset{}) {
         assert A == GPositiveElements(A) + GNegativeElements(A);
@@ -127,33 +112,51 @@ lemma Partes(A:multiset<int>)
     }
 }
 
+lemma ParticionInt_ParticionNat1(A:multiset<int>)
+    ensures var PA := ParticionInt_to_ParticionNat(A);
+          ParticionInt(A) <== ParticionNat(PA)
+{   
+    FPosComputeGPos(A); FNegComputeGNeg(A); FNegToPosComputeGNegToPos(GNegativeElements(A)); Partes(A);
+    var PA := ParticionInt_to_ParticionNat(A);
+    if (ParticionNat(PA)) {
+        var P1:multiset<nat>,P2:multiset<nat> :| P1 <= PA && P2 <= PA && P1 + P2 == PA && GSumNat(P1) == GSumNat(P2);
+        
+        
+        var PAInt:multiset<int> := PA;
+        assert PAInt == GPositiveElements(A) + GMultisetNegToPos(GNegativeElements(A));
+
+        var IP1:multiset<nat> := multiset{}; var IP2:multiset<nat> := multiset{}; 
+
+        assume IP1 <= A && IP2 <= A && IP1 + IP2 == A && GSumInt(IP1) == GSumInt(IP2);
+    }
+}
+
+
 lemma ParticionInt_ParticionNat2(A:multiset<int>)
     ensures var PA := ParticionInt_to_ParticionNat(A);
           ParticionInt(A) ==> ParticionNat(PA)
 {
     if (ParticionInt(A)) {
+        FPosComputeGPos(A); FNegComputeGNeg(A); FNegToPosComputeGNegToPos(GNegativeElements(A)); Partes(A); 
         var PA:multiset<nat> := ParticionInt_to_ParticionNat(A); var PAInt:multiset<int> := PA;
         
-        FPosComputeGPos(A); FNegComputeGNeg(A); FNegToPosComputeGNegToPos(GNegativeElements(A));
         var P1:multiset<int>,P2:multiset<int> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumInt(P1) == GSumInt(P2);
+        Partes(P1); Partes(P2);
         
         var NP1:multiset<int> := GPositiveElements(P1) + GMultisetNegToPos(GNegativeElements(P2)); 
         var NP2:multiset<int> := GPositiveElements(P2) + GMultisetNegToPos(GNegativeElements(P1));
 
         // Demostracion 1 :
-         
         
-        assert PAInt == GPositiveElements(A) + GMultisetNegToPos(GNegativeElements(A));
-
-        Partes(A); Partes(P1); Partes(P2);
-
+        // FALTA POR DEMOSTRAR ALGUNA PROPIEDAD QUE PERMITA INTERCALAR ELEMENTOS COMO Positivos + Negativos = Negativos + Positivos
+        //assert PAInt == GPositiveElements(A) + GMultisetNegToPos(GNegativeElements(A));
+        
         assert A == P1 + P2;
         assert P1 == GPositiveElements(P1) + GNegativeElements(P1);
         assert P2 == GPositiveElements(P2) + GNegativeElements(P2);
-        //assert P2 == GNegativeElements(P2) + GPositiveElements(P2);
-        
+        //assert GPositiveElements(P2) + GNegativeElements(P2) == GNegativeElements(P2) + GPositiveElements(P2);
         //assert A == P1 + GPositiveElements(P2) + GNegativeElements(P2);
- 
+        
         assume GPositiveElements(A) == GPositiveElements(P1) + GPositiveElements(P2);
         
         assume GMultisetNegToPos(GNegativeElements(A)) == GMultisetNegToPos(GNegativeElements(P1)) + GMultisetNegToPos(GNegativeElements(P2));
