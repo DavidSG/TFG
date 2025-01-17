@@ -10,3 +10,4 @@ ghost predicate isIndependentSet(s:set<Node>, A:set<set<Node>>)
 {
   forall a | a in A :: |s * a| <= 1
 }
+
