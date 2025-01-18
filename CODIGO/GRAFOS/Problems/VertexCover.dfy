@@ -1,9 +1,8 @@
-include "../Auxiliar/Node.dfy"
+include "../Auxiliar/Graph.dfy"
 
-ghost predicate VertexCover(graph:set<Node>, k:int)
+ghost predicate VertexCover(graph:Graph, k:int)
 {
-  var A: set<set<Node>> := (set node | node in graph :: {node});
-  exists s:set<Node> :: isVertexCover(s,A) && |s| <= k && s <= graph
+  exists s:set<Node> :: isVertexCover(s,graph.1) && |s| <= k && s <= graph.0
 }
 
 ghost predicate isVertexCover(s:set<Node>, A:set<set<Node>>)

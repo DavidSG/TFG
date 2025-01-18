@@ -1,13 +1,11 @@
-include "../Auxiliar/Node.dfy"
+include "../Auxiliar/Graph.dfy"
 
-ghost predicate IndependentSet(graph:set<Node>, k:int)
-reads graph
+ghost predicate IndependentSet(graph:Graph, k:int)
 {
-  var A: set<set<Node>> := (set node, adj | node in graph && adj in node.adyacentes:: {node, adj});
-  exists s:set<Node> :: isIndependentSet(s,A) && |s| >= k && s <= graph
+  exists s:set<Node> :: isIndependentSet(s,graph.1) && |s| >= k && s <= graph.0
 }
 
-ghost predicate isIndependentSet(s:set<Node>, A:set<set<Node>>)
+ghost predicate isIndependentSet(s:set<Node>, A:set<Edge>)
 {
   forall a | a in A :: |s * a| <= 1
 }
