@@ -21,7 +21,7 @@ lemma IndependentSet_VertexCover1(graph:Graph, k:int)
 {   
     var (Vgraph,Vk) := IndependentSet_to_VertexCover(graph,k);
     if (VertexCover(Vgraph,Vk)) {
-        
+        asdfasdfsadf
     }
 }
 
