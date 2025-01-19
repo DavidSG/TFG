@@ -11,4 +11,9 @@ function invert (graph:Graph) : (r:Graph)
     (invertGraph)
 }
 
+predicate isValidGraph(graph: Graph)
+{
+    forall e | e in graph.1 :: |e| == 2
+}
+
 

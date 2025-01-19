@@ -7,5 +7,5 @@ ghost predicate Clique(graph:Graph, k:int)
 
 ghost predicate isClique(s:set<Node>, A:set<set<Node>>)
 {
-  (forall u,v | u in s && v in s && u != v :: {u,v} in A)
+  forall u,v | u in s && v in s && u != v :: {u,v} in A
 }
