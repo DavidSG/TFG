@@ -5,7 +5,7 @@ ghost predicate VertexCover(graph:Graph, k:int)
   exists s:set<Node> :: isVertexCover(s,graph.1) && |s| <= k && s <= graph.0
 }
 
-ghost predicate isVertexCover(s:set<Node>, A:set<set<Node>>)
+ghost predicate isVertexCover(s:set<Node>, E:set<set<Node>>)
 {
-  forall a | a in A :: |s * a| != 0
+  forall e | e in E :: |s * e| > 0
 }
