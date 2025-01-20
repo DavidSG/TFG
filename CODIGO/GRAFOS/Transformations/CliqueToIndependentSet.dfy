@@ -21,10 +21,6 @@ lemma aux (IndepSet:set<Node>, graph:Graph)
     requires isIndependentSet(IndepSet, graph.1)
     ensures forall u,v | u in IndepSet && v in IndepSet && u != v :: {u,v} !in graph.1
 
-lemma aux2 (clique:set<Node>, graph:Graph)
-    requires isClique(clique, graph.1)
-    ensures forall u,v | u in clique && v in clique && u != v :: {u,v} !in invert(graph).1
-    ensures forall e | e in invert(graph).1 :: |clique * e| < 2
 
 lemma Clique_IndependentSet1(graph:Graph, k:int)
     requires isValidGraph(graph)
@@ -56,7 +52,8 @@ lemma Clique_IndependentSet2(graph:Graph, k:int)
         var IndepSet:set<Node> := clique;
 
         // Demostracion 1 : isIndependentSet(IndepSet,graph.1)
-        aux2(clique,graph);
+        aux(IndepSet,graph);
+        auxIndependentSet(IndepSet,graph);
 
         assert isIndependentSet(IndepSet,Vgraph.1) && |IndepSet| >= Vk && IndepSet <= Vgraph.0;
     }
