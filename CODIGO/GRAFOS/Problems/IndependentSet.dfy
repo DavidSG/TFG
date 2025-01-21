@@ -12,3 +12,6 @@ ghost predicate isIndependentSet(s:set<Node>, E:set<Edge>)
 
 lemma auxIndependentSet (IndepSet:set<Node>, graph:Graph)
     ensures forall e | e in graph.1 :: |IndepSet * e| <= 1 <==> forall u,v | u in IndepSet && v in IndepSet && u != v :: {u,v} !in graph.1
+{
+  
+}
