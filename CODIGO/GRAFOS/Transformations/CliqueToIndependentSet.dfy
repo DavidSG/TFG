@@ -34,7 +34,8 @@ lemma Clique_IndependentSet1(graph:Graph, k:int)
         var clique:set<Node> := IndepSet;
 
         // Demostracion 1 : isClique(clique,graph.1)
-        aux(IndepSet,Vgraph);
+        auxIndependentSet(IndepSet,Vgraph);
+        assert forall u,v | u in IndepSet && v in IndepSet && u != v :: {u,v} !in Vgraph.1;
 
         assert isClique(clique,graph.1) && |clique| >= k && clique <= graph.0;
     }
@@ -52,8 +53,7 @@ lemma Clique_IndependentSet2(graph:Graph, k:int)
         var IndepSet:set<Node> := clique;
 
         // Demostracion 1 : isIndependentSet(IndepSet,graph.1)
-        aux(IndepSet,graph);
-        auxIndependentSet(IndepSet,graph);
+        auxIndependentSet(IndepSet,Vgraph);
 
         assert isIndependentSet(IndepSet,Vgraph.1) && |IndepSet| >= Vk && IndepSet <= Vgraph.0;
     }
