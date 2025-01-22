@@ -18,9 +18,31 @@ lemma IndependentSet_VertexCover(graph:Graph, k:int)
 }
 
 lemma aux (IndepSet:set<Node>, vCover:set<Node>, graph:Graph)
+    requires isValidGraph(graph) && isIndependentSet(IndepSet, graph.1) && isVertexCover(vCover, graph.1)
     requires IndepSet + vCover == graph.0
     requires IndepSet * vCover == {}
     ensures forall e | e in graph.1 :: |IndepSet * e| + |vCover * e| == |e|
+    decreases |graph.1|
+{   
+    if (|graph.1| == 0) {
+        assert forall e | e in graph.1 :: |IndepSet * e| + |vCover * e| == |e|;
+    }
+    else {
+        var e:set<Node> :| e in graph.1;
+        assert |e| == 2;
+
+        assert |IndepSet * e| <= 1;
+        if (|IndepSet * e| == 0) {
+            assert |vCover * e| == 2;
+        }
+        else if (|IndepSet * e| == 1) {
+            assume |vCover * e| == 1;
+        }
+
+        aux (IndepSet,vCover,(graph.0,graph.1-{e}));
+        assert forall e | e in graph.1 :: |IndepSet * e| + |vCover * e| == |e|;
+    }
+}
 
 
 lemma IndependentSet_VertexCover1(graph:Graph, k:int)
