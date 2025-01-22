@@ -13,7 +13,7 @@ function invert (graph:Graph) : (r:Graph)
 
 predicate isValidGraph(graph: Graph)
 {
-    forall e | e in graph.1 :: |e| == 2
+    forall e | e in graph.1 :: (|e| == 2 && forall n | n in e :: n in graph.0)
 }
 
 

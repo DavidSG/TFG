@@ -17,12 +17,6 @@ lemma VertexCover_IndependentSet(graph:Graph, k:int)
     VertexCover_IndependentSet2(graph,k);
 }
 
-lemma aux (IndepSet:set<Node>, vCover:set<Node>, graph:Graph)
-    requires IndepSet + vCover == graph.0
-    requires IndepSet * vCover == {}
-    ensures forall e | e in graph.1 :: |IndepSet * e| + |vCover * e| == |e|
-
-
 lemma VertexCover_IndependentSet1(graph:Graph, k:int)
     requires isValidGraph(graph)
     ensures var (Vgraph,Vk) := VertexCover_to_IndependentSet(graph,k);
@@ -35,7 +29,7 @@ lemma VertexCover_IndependentSet1(graph:Graph, k:int)
         var vCover:set<Node> := graph.0 - IndepSet;
 
         // Demostracion 1 : isVertexCover(IndepSet,graph.1)
-        aux (IndepSet, vCover, graph); // Por cada arista, hay uno o dos elementos de IndependentSet, lo que significa que debe haber uno de IndepSet        
+        assert forall e | e in graph.1 :: IndepSet * e + vCover * e == e;
         
         assert isVertexCover(vCover,graph.1) && |vCover| <= k && vCover <= graph.0;
     }
@@ -53,7 +47,7 @@ lemma VertexCover_IndependentSet2(graph:Graph, k:int)
         var IndepSet:set<Node> := graph.0 - vCover;
 
         // Demostracion 1 : isIndependentSet(vCover,graph.1)
-        aux(IndepSet, vCover, graph); 
+        assert forall e | e in graph.1 :: IndepSet * e + vCover * e == e;
 
         assert isIndependentSet(IndepSet,Vgraph.1) && |IndepSet| >= Vk && vCover <= Vgraph.0;
     }
