@@ -9,7 +9,7 @@ function SumaNat_to_SumaInt(A:multiset<nat>, S:nat) : (r:(multiset<int>,int))
 
 lemma SumaNat_SumaInt(A:multiset<nat>, S:nat)
   ensures var (SA, SS):= SumaNat_to_SumaInt(A, S);
-          SumaNat(A,S) <==> SumaNat(SA, SS)
+          SumaNat(A,S) <==> SumaInt(SA, SS)
 { 
     SumaNat_SumaInt1(A,S);
     SumaNat_SumaInt2(A,S);
