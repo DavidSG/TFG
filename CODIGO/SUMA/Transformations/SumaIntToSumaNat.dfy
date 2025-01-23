@@ -22,16 +22,12 @@ function MultisetNatToInt(A:multiset<nat>) : (r:(multiset<int>))
         if (minInt == 0) then MultisetNatToInt(A-multiset{min}) else multiset{minInt} + MultisetNatToInt(A-multiset{min})
 }
 
-lemma aux (A:multiset<int>)
-    requires forall e | e in A :: e > -10 && e < 10
-    ensures MultisetNatToInt(MultisetIntToNat(A)) == A
-
 function SumaInt_to_SumaNat(A:multiset<int>, S:int) : (r:(multiset<nat>,nat))
     requires forall e | e in A :: e > -10 && e < 10
     requires S > -10 && S < 10
 {
     var SA:multiset<nat> := MultisetIntToNat(A);
-    var SS:nat := S+|A|*1000;
+    var SS:nat := |A|*1000;
     (SA,SS)
 }
 
@@ -74,7 +70,6 @@ requires forall e | e in A :: e > -10 && e < 10
 
         var CNat:multiset<nat> := MultisetIntToNat(CInt);
         
-        assert MultisetIntToNat(A) == SA;
         assume CNat <= SA && GSumNat(CNat) == SS;
     }
 }
