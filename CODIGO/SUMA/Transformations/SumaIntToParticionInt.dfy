@@ -25,15 +25,14 @@ lemma SumaInt_ParticionInt1(A:multiset<int>, S:int)
     // PA = {1, 2, 3, 4, 2(N)}   
     // S = 6
     if (ParticionInt(PA)) {
+        FSumIntComputaGSumInt(A); 
         var N := 2*S - GSumInt(A); // N = 2
-        var PA' := PA - multiset{N}; // {1, 2, 3, 4} 
-        FSumIntComputaGSumInt(A); FSumIntComputaGSumInt(PA);
         GSumIntPartes(PA,A,multiset{N});
         
         var P1 :multiset<int>, P2:multiset<int> :| P1 <= PA && P2 <= PA && P1 + P2 == PA && GSumInt(P1) == GSumInt(P2); // P1 = {2, 4}  ->  Sum(P1) = 6
 
         GSumIntPartes(PA,P1,P2); // GSumInt(PA) == 2*S && GSumInt(P1) == GSumInt(P2) => GSumInt(P1) == S
-
+        //assert GSumInt(P1) == GSumInt(P2) == S;
         assert (P1 <= A && GSumInt(P1) == S) || (P2 <= A && GSumInt(P2) == S); // Sum(C) == 6
         
     }
@@ -45,9 +44,9 @@ lemma SumaInt_ParticionInt2(A:multiset<int>, S:int)
 {
     // A = {1, 2, 3, 4}, S = 6
     if (SumaInt(A,S)) {
+        FSumIntComputaGSumInt(A);
         var PA := SumaInt_to_ParticionInt(A, S);
         var N := 2*S - GSumInt(A); // N = 2
-        FSumIntComputaGSumInt(A); FSumIntComputaGSumInt(PA);
         GSumIntPartes(PA,A,multiset{N}); // PA == A + N;
 
         var C :| C <= A && GSumInt(C) == S;

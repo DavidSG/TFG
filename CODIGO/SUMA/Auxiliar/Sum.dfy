@@ -181,6 +181,24 @@ lemma GSumNatPartes(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>)
   }
 }
 
+
+
+lemma GSumIntElem(A:multiset<int>, i:int)
+ensures GSumInt(A+multiset{i}) == i + GSumInt(A)
+/*{
+ if (A == multiset{}) {}
+ else {
+   var m := minInt(A);
+   GSumIntElem(A-multiset{m},i);
+   assert GSumInt(A-multiset{m}+multiset{i}) == i + GSumInt(A-multiset{m});
+   assert A-multiset{m} + multiset{i} == A + multiset{i} - multiset{m};
+    GSumIntElem(A-multiset{m}+multiset{i},m);
+
+ }
+
+}*/
+
+
 lemma GSumIntPartes(A:multiset<int>, P1:multiset<int>, P2:multiset<int>)
     requires P1 <= A && P2 <= A && P1 + P2 == A 
     ensures GSumInt(A) == GSumInt(P1) + GSumInt(P2)
@@ -198,17 +216,25 @@ lemma GSumIntPartes(A:multiset<int>, P1:multiset<int>, P2:multiset<int>)
       assert GSumInt(A - multiset{i}) == GSumInt(P1 - multiset{i}) + GSumInt(P2);
 
       // Demostracion 2 : Sum(A) == i + Sum(A-i) 
-      assume GSumInt(A) == i + GSumInt(A - multiset{i});
+      GSumIntElem(A-multiset{i},i);
+      assert A == (A - multiset{i}) + multiset{i};
+      assert GSumInt(A)== i + GSumInt(A - multiset{i});
 
       // Demostracion 3 : Sum(P1) == i + Sum(P1-i) 
-      assume GSumInt(P1) == i + GSumInt(P1 - multiset{i});
+      GSumIntElem(P1-multiset{i},i);
+      assert P1 == (P1 - multiset{i}) + multiset{i};
+      assert GSumInt(P1) == i + GSumInt(P1 - multiset{i});
 
 
       assert GSumInt(A) == GSumInt(P1) + GSumInt(P2);
     }
     else {
       GSumIntPartes(A - multiset{i}, P1, P2 - multiset{i});
-      assume GSumInt(A) == GSumInt(P1) + GSumInt(P2);
+      GSumIntElem(A-multiset{i},i);
+      assert A == (A - multiset{i}) + multiset{i}; 
+      GSumIntElem(P2-multiset{i},i);
+      assert P2 == (P2 - multiset{i}) + multiset{i};   
+         
     }
 
   }
