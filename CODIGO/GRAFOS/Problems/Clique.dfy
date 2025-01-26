@@ -13,13 +13,16 @@ ghost predicate isClique(s:set<Node>, graph:Graph)
   forall u,v | u in s && v in s && u != v :: {u,v} in graph.1
 }
 
-function minEdge(m:multiset<int>): (l:int)
-  requires m != multiset{}
-  ensures l in m && (forall x | x in m :: l <= x) 
-{ HasMinimumInt(m);
-  var x :| x in m && (forall y | y in m :: x <= y); 
-  x
+function FSumNat(e : Edge) : nat
+  requires |e| == 2
+{ 
+  var u,v;
 }
+
+function minEdge(E:set<Edge>): (min:Edge)
+  requires E != {}
+  ensures forall e | e in E :: 
+
 
 method {:verify true} checkClique(graph:Graph, k:int, I:set<Node>) returns (b:bool)
   requires isValidGraph(graph)
