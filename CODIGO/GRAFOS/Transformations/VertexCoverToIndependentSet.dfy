@@ -49,6 +49,6 @@ lemma VertexCover_IndependentSet2(graph:Graph, k:int)
         // Demostracion 1 : isIndependentSet(vCover,graph.1)
         assert forall e | e in graph.1 :: IndepSet * e + vCover * e == e;
 
-        assert vCover <= Vgraph.0 && isIndependentSet(IndepSet,Vgraph) && |IndepSet| >= Vk;
+        assert IndepSet <= Vgraph.0 && isIndependentSet(IndepSet,Vgraph) && |IndepSet| >= Vk;
     }
 }
