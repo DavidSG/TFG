@@ -6,7 +6,7 @@ function Clique_to_IndependentSet(graph:Graph, k:int) : (r:(Graph,int))
     requires isValidGraph(graph)
     ensures isValidGraph(r.0)
 {
-    (invert(graph),k)
+    (complement(graph),k)
 }
 
 lemma Clique_IndependentSet(graph:Graph, k:int)

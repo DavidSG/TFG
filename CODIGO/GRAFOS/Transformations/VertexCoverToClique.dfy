@@ -6,7 +6,7 @@ include "../Problems/Clique.dfy"
 function VertexCover_to_Clique(graph:Graph, k:int) : (r:(Graph,int))
     requires isValidGraph(graph)
 {
-    (invert(graph),|graph.0|-k)
+    (complement(graph),|graph.0|-k)
 }
 
 lemma VertexCover_Clique(graph:Graph, k:int)
@@ -30,7 +30,7 @@ lemma VertexCover_Clique1(graph:Graph, k:int)
 {   
     var (Vgraph,Vk) := VertexCover_to_Clique(graph,k);
     if (Clique(Vgraph,Vk)) {
-        var clique:set<Node> :| isClique(clique,Vgraph.1) && |clique| >= Vk && clique <= Vgraph.0;
+        var clique:set<Node> :| clique <= Vgraph.0 && isClique(clique,Vgraph) && |clique| >= Vk;
 
         var IndepSet:set<Node> := clique;
 
@@ -40,7 +40,7 @@ lemma VertexCover_Clique1(graph:Graph, k:int)
         auxIndependentSet(IndepSet,graph);
         aux (IndepSet, vCover, graph);
 
-        assert isVertexCover(vCover,graph.1) && |vCover| <= k && vCover <= graph.0;
+        assert vCover <= graph.0 && isVertexCover(vCover,graph) && |vCover| <= k;
     }
 }
 
@@ -51,7 +51,7 @@ lemma VertexCover_Clique2(graph:Graph, k:int)
 {
     if (VertexCover(graph,k)) {
         var (Vgraph,Vk) := VertexCover_to_Clique(graph,k);
-        var vCover:set<Node> :| isVertexCover(vCover,graph.1) && |vCover| <= k && vCover <= graph.0;
+        var vCover:set<Node> :| vCover <= graph.0 && isVertexCover(vCover,graph) && |vCover| <= k;
 
         var IndepSet:set<Node> := graph.0 - vCover;
 
@@ -60,6 +60,6 @@ lemma VertexCover_Clique2(graph:Graph, k:int)
         // Demostracion 1 : isClique(IndepSet,Vgraph.1)
         auxIndependentSet(IndepSet,Vgraph);
 
-        assert isClique(clique,Vgraph.1) && |clique| >= Vk && clique <= Vgraph.0;
+        assert clique <= Vgraph.0 && isClique(clique,Vgraph) && |clique| >= Vk;
     }
 }

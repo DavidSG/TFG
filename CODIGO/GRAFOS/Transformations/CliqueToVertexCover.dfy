@@ -6,14 +6,14 @@ include "../Problems/VertexCover.dfy"
 function Clique_to_VertexCover(graph:Graph, k:int) : (r:(Graph,int))
     requires isValidGraph(graph)
 {
-    (invert(graph),|graph.0|-k)
+    (complement(graph),|graph.0|-k)
 }
 
 lemma Clique_VertexCover(graph:Graph, k:int)
     requires isValidGraph(graph)
     ensures var (Vgraph,Vk):= Clique_to_VertexCover(graph,k);
         Clique(graph,k) <==> VertexCover(Vgraph,Vk)
-{ 
+{
     Clique_VertexCover1(graph,k);
     Clique_VertexCover2(graph,k);
 }
@@ -25,7 +25,7 @@ lemma Clique_VertexCover1(graph:Graph, k:int)
 {   
     var (Vgraph,Vk) := Clique_to_VertexCover(graph,k);
     if (VertexCover(Vgraph,Vk)) {
-        var vCover:set<Node> :| isVertexCover(vCover,Vgraph.1) && |vCover| <= Vk && vCover <= Vgraph.0;
+        var vCover:set<Node> :| vCover <= Vgraph.0 && isVertexCover(vCover,Vgraph) && |vCover| <= Vk;
 
         var IndepSet:set<Node> := Vgraph.0 - vCover;
 
@@ -35,7 +35,7 @@ lemma Clique_VertexCover1(graph:Graph, k:int)
         auxIndependentSet(IndepSet,Vgraph);
         assert forall u,v | u in IndepSet && v in IndepSet && u != v :: {u,v} !in Vgraph.1;
 
-        assert isClique(clique,graph.1) && |clique| >= k && clique <= graph.0;
+        assert clique <= graph.0 && isClique(clique,graph) && |clique| >= k;
     }
 }
 
@@ -46,7 +46,7 @@ lemma Clique_VertexCover2(graph:Graph, k:int)
 {
     if (Clique(graph,k)) {
         var (Vgraph,Vk) := Clique_to_VertexCover(graph,k);
-        var clique:set<Node> :| isClique(clique,graph.1) && |clique| >= k && clique <= graph.0;
+        var clique:set<Node> :| clique <= graph.0 && isClique(clique,graph) && |clique| >= k;
 
         var IndepSet:set<Node> := clique;
 
@@ -55,6 +55,6 @@ lemma Clique_VertexCover2(graph:Graph, k:int)
         // Demostracion 1 : isVertexCover(IndepSet,Vgraph.1)
         auxIndependentSet(IndepSet,Vgraph);
 
-        assert isVertexCover(vCover,Vgraph.1) && |vCover| <= Vk && vCover <= Vgraph.0;
+        assert isVertexCover(vCover,Vgraph) && |vCover| <= Vk && vCover <= Vgraph.0;
     }
 }
