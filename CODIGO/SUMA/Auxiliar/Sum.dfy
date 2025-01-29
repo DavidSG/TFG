@@ -220,32 +220,24 @@ lemma GSumIntPartes(A:multiset<int>, P1:multiset<int>, P2:multiset<int>)
     assert GSumInt(A) == GSumInt(P1) + GSumInt(P2);
   }
   else {
-    var i := minInt(A);
+    var i :| i in A;
     if (i in P1) {
       // Demostracion 1 : Sum(A-i) == Sum(P1-i) + Sum(P2)  Quitamos i para el paso inductivo
       GSumIntPartes(A - multiset{i}, P1 - multiset{i}, P2);
       assert GSumInt(A - multiset{i}) == GSumInt(P1 - multiset{i}) + GSumInt(P2);
 
       // Demostracion 2 : Sum(A) == i + Sum(A-i) 
-      GSumIntElem(A-multiset{i},i);
-      assert A == (A - multiset{i}) + multiset{i};
-      assert GSumInt(A)== i + GSumInt(A - multiset{i});
-
+      GSumIntElemIn(A,i);
+      
       // Demostracion 3 : Sum(P1) == i + Sum(P1-i) 
-      GSumIntElem(P1-multiset{i},i);
-      assert P1 == (P1 - multiset{i}) + multiset{i};
-      assert GSumInt(P1) == i + GSumInt(P1 - multiset{i});
-
+      GSumIntElemIn(P1,i);
 
       assert GSumInt(A) == GSumInt(P1) + GSumInt(P2);
     }
     else {
       GSumIntPartes(A - multiset{i}, P1, P2 - multiset{i});
-      GSumIntElem(A-multiset{i},i);
-      assert A == (A - multiset{i}) + multiset{i}; 
-      GSumIntElem(P2-multiset{i},i);
-      assert P2 == (P2 - multiset{i}) + multiset{i};   
-         
+      GSumIntElemIn(A,i);
+      GSumIntElemIn(P2,i);         
     }
 
   }
