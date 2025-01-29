@@ -13,7 +13,7 @@ ghost predicate isClique(s:set<Node>, graph:Graph)
   forall u,v | u in s && v in s && u != v :: {u,v} in graph.1
 }
 
-function FSumNat(e : Edge) : nat
+/*function FSumNat(e : Edge) : nat
   requires |e| == 2
 { 
   var u,v;
@@ -34,5 +34,5 @@ method {:verify true} checkClique(graph:Graph, k:int, I:set<Node>) returns (b:bo
   }
   b := I <= graph.0 && |I| >= k;
 }
-
+*/
 
