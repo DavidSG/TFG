@@ -29,7 +29,6 @@ lemma Clique_VertexCover1(graph:Graph, k:int)
 
         var clique:set<Node> := Vgraph.0 - vCover;
 
-        // Demostracion 1 : isClique(clique,graph)
         assert forall u,v | u in clique && v in clique && u != v :: {u,v} !in Vgraph.1;
         assert clique <= graph.0 && isClique(clique,graph) && |clique| >= k;
     }
@@ -46,7 +45,6 @@ lemma Clique_VertexCover2(graph:Graph, k:int)
 
         var vCover:set<Node> := graph.0 - clique;
 
-        // Demostracion 1 : isVertexCover(IndepSet,Vgraph)
         assert isVertexCover(vCover,Vgraph) && |vCover| <= Vk && vCover <= Vgraph.0;
     }
 }
