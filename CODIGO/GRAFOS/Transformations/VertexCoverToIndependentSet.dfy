@@ -28,7 +28,7 @@ lemma VertexCover_IndependentSet1(graph:Graph, k:int)
 
         var vCover:set<Node> := graph.0 - IndepSet;
 
-        // Demostracion 1 : isVertexCover(IndepSet,graph.1)
+        // Demostracion : isVertexCover(IndepSet,graph)
         assert forall e | e in graph.1 :: IndepSet * e + vCover * e == e;
         
         assert vCover <= graph.0 && isVertexCover(vCover,graph) && |vCover| <= k;
@@ -46,7 +46,7 @@ lemma VertexCover_IndependentSet2(graph:Graph, k:int)
 
         var IndepSet:set<Node> := graph.0 - vCover;
 
-        // Demostracion 1 : isIndependentSet(vCover,graph.1)
+        // Demostracion : isIndependentSet(vCover,graph)
         assert forall e | e in graph.1 :: IndepSet * e + vCover * e == e;
 
         assert IndepSet <= Vgraph.0 && isIndependentSet(IndepSet,Vgraph) && |IndepSet| >= Vk;
