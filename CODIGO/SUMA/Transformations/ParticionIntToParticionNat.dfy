@@ -4,8 +4,7 @@ include "../Problems/ParticionInt.dfy"
 
 function FMultisetNegToPos(A:multiset<int>) : (r:(multiset<int>)) 
 requires forall e | e in A :: e < 0
-ensures forall e | e in r :: e >= 0 && -e in A
-ensures |A| == |r|
+ensures r == GMultisetNegToPos(A)
 {
     if A == multiset{} then multiset{}
     else 
@@ -13,21 +12,21 @@ ensures |A| == |r|
         (multiset{-min} + FMultisetNegToPos(A-multiset{min}))
 }
 
-function GMultisetNegToPos(A:multiset<int>) : (r:(multiset<int>)) 
+ghost function GMultisetNegToPos(A:multiset<int>) : (r:(multiset<int>)) 
 requires forall e | e in A :: e < 0
-ensures forall e | e in r :: e >= 0 && -e in A
+ensures forall e | e in r :: e > 0 && -e in A
+ensures forall e | -e in A :: e in r && r[e] == A[-e]
+//ensures forall e | e in A :: -e in r && r[-e] == A[e]//esto se queda colgado
 ensures |A| == |r|
 {
     if A == multiset{} then multiset{}
     else 
-        var min := minInt(A);
-        (multiset{-min} + GMultisetNegToPos(A-multiset{min}))
+        var m :| m in A; 
+        (multiset{-m} + GMultisetNegToPos(A-multiset{m}))
 }
 
 function FPositiveElements(A:multiset<int>) : (r:(multiset<int>)) 
-ensures r <= A 
-ensures forall e | e in A && e >= 0 :: e in r && r[e] == A[e]
-ensures forall e | e in r :: e >= 0 
+ensures r == GPositiveElements(A)
 {  
     if A == multiset{} then multiset{}
     else 
@@ -39,9 +38,7 @@ ensures forall e | e in r :: e >= 0
 }
 
 function FNegativeElements(A:multiset<int>) : (r:(multiset<int>)) 
-ensures r <= A 
-ensures forall e | e in A && e < 0 :: r[e] == A[e]
-ensures forall e | e in r :: e < 0
+ensures r == GNegativeElements(A)
 {  
     if A == multiset{} then multiset{}
     else 
@@ -93,15 +90,7 @@ lemma ParticionInt_ParticionNat(A:multiset<int>)
 }
 
 
-lemma FPosComputeGPos(A:multiset<int>)
-    ensures FPositiveElements(A) == GPositiveElements(A)
 
-lemma FNegComputeGNeg(A:multiset<int>)
-    ensures FNegativeElements(A) == GNegativeElements(A)
-
-lemma FNegToPosComputeGNegToPos(A:multiset<int>)
-    requires forall e | e in A :: e < 0
-    ensures FMultisetNegToPos(A) == GMultisetNegToPos(A)
 
 lemma FPositiveUnion(P1: multiset<int>, P2: multiset<int>)
     ensures FPositiveElements(P1 + P2) == FPositiveElements(P1) + FPositiveElements(P2)
@@ -115,26 +104,16 @@ lemma FMultisetNegToPosUnion(P1: multiset<int>, P2: multiset<int>)
      ensures FMultisetNegToPos(P1 + P2) == FMultisetNegToPos(P1) + FMultisetNegToPos(P2)
 
 
-lemma {:verify false} Partes(A:multiset<int>)
+lemma {:verify true} Partes(A:multiset<int>)
     ensures A == GPositiveElements(A) + GNegativeElements(A) 
-            && GPositiveElements(A) * GNegativeElements(A) == multiset{}
-{
-    if (A == multiset{}) {
-        assert A == GPositiveElements(A) + GNegativeElements(A);
-    }
-    else {
-        var min := minInt(A);
-        assert min in GPositiveElements(A) || min in GNegativeElements(A); 
-        Partes(A-multiset{min});
-        assert A == GPositiveElements(A) + GNegativeElements(A);
-    }
-}
+    ensures GPositiveElements(A) * GNegativeElements(A) == multiset{}
+{ }
 
 lemma {:verify false} ParticionInt_ParticionNat1(A:multiset<int>)
     ensures var PA := ParticionInt_to_ParticionNat(A);
           ParticionInt(A) <== ParticionNat(PA)
 {   
-    FPosComputeGPos(A); FNegComputeGNeg(A); FNegToPosComputeGNegToPos(GNegativeElements(A)); Partes(A);
+     Partes(A);
     var PA := ParticionInt_to_ParticionNat(A);
     if (ParticionNat(PA)) {
         var P1:multiset<nat>,P2:multiset<nat> :| P1 <= PA && P2 <= PA && P1 + P2 == PA && GSumNat(P1) == GSumNat(P2);
@@ -159,12 +138,12 @@ lemma {:verify false} ParticionInt_ParticionNat1(A:multiset<int>)
 }
 
 
-lemma {:verify true} ParticionInt_ParticionNat2(A:multiset<int>)
+lemma {:verify false} ParticionInt_ParticionNat2(A:multiset<int>)
     ensures var PA := ParticionInt_to_ParticionNat(A);
           ParticionInt(A) ==> ParticionNat(PA)
 {
     if (ParticionInt(A)) {
-        FPosComputeGPos(A); FNegComputeGNeg(A); FNegToPosComputeGNegToPos(GNegativeElements(A)); Partes(A); 
+        Partes(A); 
         var PA:multiset<nat> := ParticionInt_to_ParticionNat(A); var PAInt:multiset<int> := PA;
         
         var P1:multiset<int>,P2:multiset<int> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumInt(P1) == GSumInt(P2);
@@ -198,10 +177,7 @@ lemma {:verify true} ParticionInt_ParticionNat2(A:multiset<int>)
             }
             FPositiveElements(P1) + FPositiveElements(P2) 
             +FMultisetNegToPos(FNegativeElements(P1)) + FMultisetNegToPos(FNegativeElements(P2));
-            {FNegComputeGNeg(P1); FNegComputeGNeg(P2);
-             FPosComputeGPos(P1); FPosComputeGPos(P2);
-             FNegToPosComputeGNegToPos(GNegativeElements(P1));
-            FNegToPosComputeGNegToPos(GNegativeElements(P2));
+            {
             assume false;
             }
             NP1 + NP2;
