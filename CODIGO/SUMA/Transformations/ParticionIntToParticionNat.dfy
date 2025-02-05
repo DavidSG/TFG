@@ -230,27 +230,26 @@ lemma {:verify true} ParticionInt_ParticionNat2(A:multiset<int>)
        }
        assert NP1 <= PA && NP2 <= PA;
        assert GSumNat(NP1) == GSumNat(NP2)by{
-       calc{
-        GSumNat(NP1);
-        //GSumNat(GPositiveElements(P1) + GMultisetNegToPos(GNegativeElements(P2)));
-        { GSumNatPartes(NP1,P1P,P2NP); }
-        GSumNat(P1P)+GSumNat(P2NP);
-        {
-            SumGPositiveNegativeElements(P2);
-            SumGPositiveNegativeElements(P1);
-            assert GSumNat(P1P) == GSumInt(P1P);
-            assert GSumNat(P2NP) == -GSumInt(P2N);
+            calc{
+                GSumNat(NP1);
+                { GSumNatPartes(NP1,P1P,P2NP); }
+                GSumNat(P1P)+GSumNat(P2NP);
+                {
+                    SumGPositiveNegativeElements(P2);
+                    SumGPositiveNegativeElements(P1);
+                    assert GSumNat(P1P) == GSumInt(P1P);
+                    assert GSumNat(P2NP) == -GSumInt(P2N);
+                }
+                GSumInt(P1P) + (- GSumInt(P2N));
+                GSumInt(P2P) + (-GSumInt(P1N));
+                {   SumGPositiveNegativeElements(P2);
+                    SumGPositiveNegativeElements(P1);
+                    assert GSumNat(P2P) == GSumInt(P2P);
+                    assert GSumNat(P1NP) == -GSumInt(P1N);}
+                GSumNat(P2P) + GSumNat(P1NP);    
+                {GSumNatPartes(NP2,P2P,P1NP);}
+                GSumNat(NP2);
+            }
         }
-        GSumInt(P1P) + (- GSumInt(P2N));
-        GSumInt(P2P) + (-GSumInt(P1N));
-        {   SumGPositiveNegativeElements(P2);
-            SumGPositiveNegativeElements(P1);
-            assert GSumNat(P2P) == GSumInt(P2P);
-            assert GSumNat(P1NP) == -GSumInt(P1N);}
-        GSumNat(P2P) + GSumNat(P1NP);    
-        {GSumNatPartes(NP2,P2P,P1NP);}
-        GSumNat(NP2);
-        }
-       }
     }
 }
