@@ -29,7 +29,7 @@ lemma IndependentSet_Clique1(graph:Graph, k:int)
 
         var IndepSet:set<Node> := clique;
 
-        // Demostracion 1 : isIndependentSet(IndepSet,graph.1)
+        // Demostracion: isIndependentSet(IndepSet,graph)
         auxIndependentSet (IndepSet, graph); 
         
         assert IndepSet <= graph.0 && isIndependentSet(IndepSet,graph) && |IndepSet| >= k;
