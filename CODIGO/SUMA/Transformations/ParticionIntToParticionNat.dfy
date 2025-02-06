@@ -111,8 +111,20 @@ lemma ParticionInt_ParticionNat(A:multiset<int>)
     ParticionInt_ParticionNat2(A);
 }
 
+lemma CommutativeUnion<T>(x:multiset<T>,y:multiset<T>)
+ensures x + y == y + x
+{}
+lemma AssociativeUnion<T>(x:multiset<T>,y:multiset<T>,z:multiset<T>)
+ensures x + (y + z) == (x + y) + z
+{}
 
+lemma CommutativeAssociativeUnion<T>(x:multiset<T>,y:multiset<T>,z:multiset<T>,u:multiset<T>)
+ensures (x + y) + (z + u) == (x + u) + (y + z)
+{} 
 
+lemma IntersectionUnion<T>(x:multiset<T>,y:multiset<T>,z:multiset<T>)
+//requires (x + y) * z >=  x * y + y * z
+//ensures (x + y) * z <= (x * y + y * z)
 
 lemma GPositiveUnion(P1: multiset<int>, P2: multiset<int>)
     ensures GPositiveElements(P1 + P2) == GPositiveElements(P1) + GPositiveElements(P2)
@@ -124,6 +136,11 @@ lemma GMultisetNegToPosUnion(P1: multiset<int>, P2: multiset<int>)
      requires forall e | e in P1 :: e < 0
      requires forall e | e in P2 :: e < 0
      ensures GMultisetNegToPos(P1 + P2) == GMultisetNegToPos(P1) + GMultisetNegToPos(P2)
+
+lemma GMultisetNegToPosToNeg(A: multiset<int>)
+requires forall e | e in A :: e < 0
+ensures GMultisetPosToNeg(GMultisetNegToPos(A)) == A
+
 
 lemma NegSumGMultisetNegToPos(A:multiset<int>)
 requires forall e | e in A :: e < 0
@@ -143,7 +160,7 @@ lemma IntersectionContained<T>(A: multiset<T>,B:multiset<T>)
 ensures A * B <= A && A * B <= B
 {}
 
-lemma {:verify false} ParticionInt_ParticionNat1(A:multiset<int>)
+lemma {:verify true} ParticionInt_ParticionNat1(A:multiset<int>)
     ensures var PA := ParticionInt_to_ParticionNat(A);
           ParticionInt(A) <== ParticionNat(PA)
 {   
@@ -151,8 +168,8 @@ lemma {:verify false} ParticionInt_ParticionNat1(A:multiset<int>)
     var PA := ParticionInt_to_ParticionNat(A);
     if (ParticionNat(PA)) {
         var P1:multiset<nat>,P2:multiset<nat> :| P1 <= PA && P2 <= PA && P1 + P2 == PA && GSumNat(P1) == GSumNat(P2);
-        
-        var PositiveA:multiset<nat> := GPositiveElements(A);
+
+        /*var PositiveA:multiset<nat> := GPositiveElements(A);
         var NegativeA:multiset<nat> := GMultisetNegToPos(GNegativeElements(A));
         var P1Pos := P1 * PositiveA; var P2Pos := P2 * PositiveA;
         IntersectionContained(P1,PositiveA); IntersectionContained(P2,PositiveA);
@@ -165,21 +182,49 @@ lemma {:verify false} ParticionInt_ParticionNat1(A:multiset<int>)
          
         assume false;
         //assume IP1 <= A && IP2 <= A && IP1 + IP2 == A && GSumInt(IP1) == GSumInt(IP2);
+        */
+        Partes(A);
+        ghost var AP := GPositiveElements(A);
+        ghost var AN := GNegativeElements(A);
+        ghost var ANP:= GMultisetNegToPos(AN);
+        assert A == AP + AN;
+        assert PA == AP + ANP;
+        ghost var P1P:multiset<int> := P1 * AP;
+        ghost var P2P:multiset<int> := P2 * AP;
+        ghost var P1NP:multiset<int> := P1 - P1P;
+        ghost var P2NP:multiset<int> := P2 - P2P;
+        ghost var P1N:multiset<int> := GMultisetPosToNeg(P1NP);
+        ghost var P2N:multiset<int> := GMultisetPosToNeg(P2NP);
+        ghost var IP1:multiset<int> := P1P + P2N; 
+        ghost var IP2:multiset<int> := P2P + P1N;
+
+        assert P1 + P2 == AP + GMultisetNegToPos(AN);
+        assume AP == P1P + P2P;
+        assume AN == P2N + P1N;
+
+        calc{
+           A;
+           AP + AN;
+           {assume AP == P1P + P2P;
+            assume AN == P2N + P1N;
+           }
+           (P1P + P2P) + (P2N + P1N);
+           {assume false; CommutativeAssociativeUnion<int>(P1P,P2P,P2N,P1N);}
+           (P1P + P2N) + (P2P + P1N);
+           IP1 + IP2;
+
+        }
+        assume false;
+        assume A == IP1 + IP2;
+        assert IP1 <= A && IP2 <= A;
+        assume GSumInt(IP1) == GSumInt(IP2);
+
+         
     }
 }
 
-lemma CommutativeUnion(x:multiset<nat>,y:multiset<nat>)
-ensures x + y == y + x
-{}
-lemma AssociativeUnion(x:multiset<nat>,y:multiset<nat>,z:multiset<nat>)
-ensures x + (y + z) == (x + y) + z
-{}
 
-lemma CommutativeAssociativeUnion(x:multiset<nat>,y:multiset<nat>,z:multiset<nat>,u:multiset<nat>)
-ensures (x + y) + (z + u) == (x + u) + (y + z)
-{} 
-
-lemma {:verify true} ParticionInt_ParticionNat2(A:multiset<int>)
+lemma {:verify false} ParticionInt_ParticionNat2(A:multiset<int>)
     ensures var PA := ParticionInt_to_ParticionNat(A);
           ParticionInt(A) ==> ParticionNat(PA)
 {
