@@ -31,7 +31,7 @@ lemma auxIndependentSet1 (IndepSet:set<Node>, graph:Graph)
       var u,v :| u in graph.0 && v in graph.0 && u !=v && e == {u,v};
       intersect(IndepSet,graph,e);
 
-      assert u in IndepSet && v in IndepSet && u != v && {u,v} in graph.1;//La contradiccion
+      assert u in IndepSet && v in IndepSet && u != v && {u,v} in graph.1; //La contradiccion
       assert false;  
   }
 }
@@ -44,10 +44,10 @@ lemma auxIndependentSet2 (IndepSet:set<Node>, graph:Graph)
 {
   if (isIndependentSet(IndepSet,graph)) {
     assume exists u,v | u in IndepSet && v in IndepSet && u != v :: {u,v} in graph.1;
-    var e :| e in graph.1 && |IndepSet * e| <= 1;
-    var u,v :| u in graph.0 && v in graph.0 && u !=v && e == {u,v};
+    var u,v :| u in IndepSet && v in IndepSet && u != v && {u,v} in graph.1;
 
-    assume forall u,v | u in IndepSet && v in IndepSet && u != v :: {u,v} !in graph.1;
+    
+    assert false;
   }
   
 }
