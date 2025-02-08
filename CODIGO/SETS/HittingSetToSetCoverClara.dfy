@@ -1,3 +1,4 @@
+//Created by: Clara Segura
 include "SetCover.dfy"
 include "HittingSet.dfy"
 
