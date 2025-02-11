@@ -148,7 +148,7 @@ ghost function {:opaque} GSumNat(m: multiset<nat>) : nat
 }
 
 lemma GSumPositiveIntNat(m:multiset<nat>)
-requires forall e | e in m :: e >= 0
+//requires forall e | e in m :: e >= 0
 ensures GSumInt(m) == GSumNat(m)
 { reveal GSumInt(); reveal GSumNat();
   if m == multiset{} {}
@@ -281,4 +281,5 @@ ensures s == GSumInt(A)
   assert A' == multiset{} && A - A' == A;
   assert s == GSumInt(A);
 }
+
 
