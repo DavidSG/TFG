@@ -39,6 +39,7 @@ lemma ParticionInt_Suma1(A:multiset<int>)
             assume FSumInt(A) % 2 == 1;
             assert (SA,SS) == (multiset{},10);
             NotSumaInt();
+            assert false;
         }
         FSumIntComputaGSumInt(A); 
 
