@@ -7,11 +7,15 @@ include "../Problems/SumaInt.dfy"
 function ParticionInt_to_SumaInt(A:multiset<int>) : (r:(multiset<int>, int))
 {
     
-    if FSumInt(A) % 2 == 1 then (multiset{}, 10)
+    if (FSumInt(A) % 2 == 1) then (multiset{}, 10)
     else
-    var S := FSumInt(A)/2;
-    (A, S)
+    var S := FSumInt(A)/2; (A, S)
 }
+
+lemma NotSumaInt()
+ensures !SumaInt(multiset{},10)
+{  reveal GSumInt();
+    assert GSumInt(multiset{}) == 0 != 10;}
 
 lemma ParticionInt_Suma(A:multiset<int>)
   ensures var (SA,SS) := ParticionInt_to_SumaInt(A);
@@ -28,17 +32,25 @@ lemma ParticionInt_Suma1(A:multiset<int>)
     var (SA,SS) := ParticionInt_to_SumaInt(A);
     // A = {1,2,3}
     // SA = {1,2,3} SS = 3
+    
     if (SumaInt(SA,SS)) {
+        assert FSumInt(A) % 2 != 1 by{
+            reveal GSumInt();
+            assume FSumInt(A) % 2 == 1;
+            assert (SA,SS) == (multiset{},10);
+            NotSumaInt();
+        }
+        FSumIntComputaGSumInt(A); 
+
         var C:multiset<int> :| C <= SA && GSumInt(C) == SS; // {1,2}
 
         var P1 := C; // {1,2}
         var P2 := A - C; // {3}
 
-        // Demostracion 1 : GSumInt(P1) == GSumInt(P2)
-        FSumIntComputaGSumInt(A); // FSumInt(A)/2 && FSumInt(A) == GsumInt(A)(Funcion) => GSumInt(A)/2 == S => GSumInt(A) = 2*S 
+        // Demostracion: GSumInt(P1) == GSumInt(P2)
         GSumIntPartes(A,P1,P2); // Sum(A) = Sum (P1+P2)(Funcion) && P1 == SS => P2 == SS
-
         assert P1 <= A && P2 <= A && P1 + P2 == A && GSumInt(P1) == GSumInt(P2);
+        existsPartition(A,P1,P2);
     }
 }
 
