@@ -96,23 +96,6 @@ ensures r == GNegativeElements(A)
 }
 
 
-
-
-
-function ParticionInt_to_ParticionNat(A:multiset<int>) : (r:(multiset<nat>))
-{   
-    (FPositiveElements(A) + FMultisetNegToPos(FNegativeElements(A)))        
-}
-
-lemma ParticionInt_ParticionNat(A:multiset<int>)
-  ensures var PA:= ParticionInt_to_ParticionNat(A);
-          ParticionInt(A) <==> ParticionNat(PA)
-{ 
-    ParticionInt_ParticionNat1(A);
-    ParticionInt_ParticionNat2(A);
-}
-
-
 lemma {:induction P} GPositiveUnionOneElement(P: multiset<int>, p: int)
 requires p >= 0
 ensures GPositiveElements(P + multiset{p}) == GPositiveElements(P) + multiset{p}
@@ -192,7 +175,24 @@ lemma {:verify true} Partes(A:multiset<int>)
 { }
 
 
-lemma {:verify false} ParticionInt_ParticionNat1(A:multiset<int>)
+
+function ParticionInt_to_ParticionNat(A:multiset<int>) : (r:(multiset<nat>))
+{   
+    (FPositiveElements(A) + FMultisetNegToPos(FNegativeElements(A)))        
+}
+
+lemma ParticionInt_ParticionNat(A:multiset<int>)
+  ensures var PA:= ParticionInt_to_ParticionNat(A);
+          ParticionInt(A) <==> ParticionNat(PA)
+{ 
+    ParticionInt_ParticionNat1(A);
+    ParticionInt_ParticionNat2(A);
+}
+
+
+
+
+lemma {:verify true} ParticionInt_ParticionNat1(A:multiset<int>)
     ensures var PA := ParticionInt_to_ParticionNat(A);
           ParticionInt(A) <== ParticionNat(PA)
 {   
@@ -337,7 +337,7 @@ lemma {:verify false} ParticionInt_ParticionNat1(A:multiset<int>)
 }
 
 
-lemma {:verify false} ParticionInt_ParticionNat2(A:multiset<int>)
+lemma {:verify true} ParticionInt_ParticionNat2(A:multiset<int>)
     ensures var PA := ParticionInt_to_ParticionNat(A);
           ParticionInt(A) ==> ParticionNat(PA)
 {

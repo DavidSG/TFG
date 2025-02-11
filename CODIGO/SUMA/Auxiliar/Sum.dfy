@@ -174,37 +174,6 @@ lemma GSumNatPartes(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>)
    GSumIntPartes(A,P1,P2);
 
   }
-/*{ reveal GSumNat();
-  if (A == multiset{}) {
-    assert P1 == multiset{};
-    assert P2 == multiset{};
-    assert GSumNat(A) == GSumNat(P1) + GSumNat(P2);
-  }
-  else {
-    var i := minNat(A);
-    if (i in P1) {
-      // Demostracion 1 : Sum(A-i) == Sum(P1-i) + Sum(P2)  Quitamos i para el paso inductivo
-      GSumNatPartes(A - multiset{i}, P1 - multiset{i}, P2);
-      assert GSumNat(A - multiset{i}) == GSumNat(P1 - multiset{i}) + GSumNat(P2);
-
-      // Demostracion 2 : Sum(A) == i + Sum(A-i) 
-      assume GSumNat(A) == i + GSumNat(A - multiset{i});
-      assert GSumNat(A) == GSumNat(multiset{i}) + GSumNat(A - multiset{i});
-
-      // Demostracion 3 : Sum(P1) == i + Sum(P1-i) 
-      assume GSumNat(P1) == i + GSumNat(P1 - multiset{i});
-
-
-      assert GSumNat(A) == GSumNat(P1) + GSumNat(P2);
-    }
-    else {
-      //assert i in A && i in P2 && i == i;
-      //GSumNatPartes(A - multiset{i}, P1, P2 - multiset{i});
-      //assert GSumNat(A) == GSumNat(P1) + GSumNat(P2);
-      assume GSumNat(A) == GSumNat(P1) + GSumNat(P2);
-    }
-  }
-}*/
 
 lemma  GSumIntElemIn(A:multiset<int>,i:int)
 requires i in A
@@ -313,51 +282,3 @@ ensures s == GSumInt(A)
   assert s == GSumInt(A);
 }
 
-
-// TRANSFORMACION DE TIPOS MULTISETS (MULTISET<INT> A MULTISET<NAT>)
-
-/*function multisetNatToInt(A : multiset<nat>) : (r:(multiset<int>))
-    requires forall e | e in A :: e >= 0
-    ensures A == r;
-
-{
-    if A == multiset{} then multiset{}
-    else var i := minInt(A) as int; multiset{i} + multisetNatToInt(A-multiset{i})
-}
-
-
-lemma SumNatESumInt (A:multiset<nat>)
-    ensures GSumNat(A) == GSumInt(A);
-{
-    if (A == multiset{}) {
-        assert GSumNat(A) == GSumInt(A);
-    }
-    else {
-        var ai := minNat(A);
-        assert ai == ai as int; SumNatESumInt(A-multiset{ai});
-        GSumNatPartes(A,multiset{ai},A-multiset{ai}); GSumIntPartes(A,multiset{ai},A-multiset{ai});
-
-        assert GSumNat(A) == GSumInt(A);
-         
-    }
-}
-*/
-
-lemma SumNatEqualsSumInt (A:multiset<nat>, B: multiset<int>)
-    requires A == B
-    ensures GSumNat(A) == GSumInt(B)
-{   reveal GSumNat();reveal GSumInt();   
-    if (A == multiset{}) {
-        assert B == multiset{};
-        assert GSumNat(A) == GSumInt(B);
-    }
-    else {
-        var ai := minNat(A);
-        var bi := minInt(B);
-        SumNatEqualsSumInt(A-multiset{ai}, B-multiset{bi});
-        assert ai == bi && GSumNat(A-multiset{ai}) == GSumInt(B-multiset{bi}); 
-        GSumNatPartes(A,multiset{ai},A-multiset{ai}); GSumIntPartes(B,multiset{bi},B-multiset{bi});
-        assert GSumNat(A) == GSumInt(B);
-         
-    }
-}

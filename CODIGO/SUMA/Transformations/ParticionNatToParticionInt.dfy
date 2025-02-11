@@ -27,9 +27,9 @@ lemma ParticionNat_ParticionInt1(A:multiset<nat>)
 
         var NP1:multiset<nat> := IP1; var NP2:multiset<nat> := IP2; 
 
-        // Demostracion 1: La suma de un multiconunto de naturales es igual a la suma de un multiconjunto de enteros 
+        // Demostracion: La suma de un multiconunto de naturales es igual a la suma de un multiconjunto de enteros 
         // si sus elementos son iguales
-        SumNatEqualsSumInt(NP1,IP1); SumNatEqualsSumInt(NP2,IP2);
+        GSumPositiveIntNat(NP1);GSumPositiveIntNat(NP2);
         assert NP1 <= A && NP2 <= A && NP1 + NP2 == A && GSumNat(NP1) == GSumNat(NP2);
     }
 }
@@ -44,9 +44,12 @@ lemma ParticionNat_ParticionInt2(A:multiset<nat>)
 
         var IP1:multiset<int> := NP1; var IP2:multiset<int> := NP2; 
 
-        // Demostracion 1: La suma de un multiconunto de naturales es igual a la suma de un multiconjunto de enteros 
+        // Demostracion: La suma de un multiconunto de naturales es igual a la suma de un multiconjunto de enteros 
         // si sus elementos son iguales
-        SumNatEqualsSumInt(NP1,IP1); SumNatEqualsSumInt(NP2,IP2);
+        GSumPositiveIntNat(IP1); GSumPositiveIntNat(IP2);
+
         assert IP1 <= PA && IP2 <= PA && IP1 + IP2 == PA && GSumInt(IP1) == GSumInt(IP2);
+        existsPartition(PA,IP1,IP2);
+        assert ParticionInt(PA);
     }
 }
