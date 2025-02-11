@@ -167,7 +167,14 @@ ensures GSumInt(m) == GSumNat(m)
 lemma GSumNatPartes(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>)
     requires P1 <= A && P2 <= A && P1 + P2 == A 
     ensures GSumNat(A) == GSumNat(P1) + GSumNat(P2)
-{ reveal GSumNat();
+  {
+   GSumPositiveIntNat(A);
+   GSumPositiveIntNat(P1);
+   GSumPositiveIntNat(P2);
+   GSumIntPartes(A,P1,P2);
+
+  }
+/*{ reveal GSumNat();
   if (A == multiset{}) {
     assert P1 == multiset{};
     assert P2 == multiset{};
@@ -197,7 +204,7 @@ lemma GSumNatPartes(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>)
       assume GSumNat(A) == GSumNat(P1) + GSumNat(P2);
     }
   }
-}
+}*/
 
 lemma  GSumIntElemIn(A:multiset<int>,i:int)
 requires i in A
