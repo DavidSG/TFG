@@ -174,8 +174,6 @@ lemma {:verify true} Partes(A:multiset<int>)
     ensures GPositiveElements(A) * GNegativeElements(A) == multiset{}
 { }
 
-
-
 function ParticionInt_to_ParticionNat(A:multiset<int>) : (r:(multiset<nat>))
 {   
     (FPositiveElements(A) + FMultisetNegToPos(FNegativeElements(A)))        

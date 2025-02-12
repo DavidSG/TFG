@@ -2,8 +2,6 @@ include "../Auxiliar/Sum.dfy"
 include "../Problems/ParticionNat.dfy"
 include "../Problems/ParticionInt.dfy"
 
-   
-
 function ParticionNat_to_ParticionInt(A:multiset<nat>) : (r:(multiset<int>))
 {
     (A)

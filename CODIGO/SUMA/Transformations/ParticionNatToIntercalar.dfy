@@ -43,7 +43,7 @@ lemma ParticionNat_Intercalar1(A:multiset<nat>)
             assert P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2);
         }
         else {
-            reveal GSumInt();
+            //reveal GSumInt();
             var elements:multiset<nat> := multiset(E);
             var E1:multiset<nat>, E2:multiset<nat> :| 
                 E[0] in E1 && E1 <= elements    // E1 positive elements
@@ -98,7 +98,7 @@ lemma ParticionNat_Intercalar2(A:multiset<nat>)
           {GSumNatPartes(E1,P1,multiset{0});}
           GSumNat(P1) + GSumNat(multiset{0});
           { GSumIntElemIn(multiset{0},0);
-            reveal GSumInt();
+            //reveal GSumInt();
             assert GSumInt(multiset{0}) == 0;
             GSumPositiveIntNat(multiset{0});
           }

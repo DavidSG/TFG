@@ -32,7 +32,7 @@ ensures l in m && (forall x | x in m :: l <= x)
 
 lemma {:induction m} FSumNatComputaGSumNat(m : multiset<nat>)
 ensures FSumNat(m) == GSumNat(m)
-{ reveal GSumNat();
+{ //reveal GSumNat();
   if m == multiset{} 
   {
    // assert GSumNat(m) == 0;
@@ -50,7 +50,7 @@ ensures FSumNat(m) == GSumNat(m)
 
 lemma {:induction m} FSumIntComputaGSumInt(m : multiset<int>)
 ensures FSumInt(m) == GSumInt(m)
-{ reveal GSumInt();
+{ //reveal GSumInt();
   if m == multiset{} 
   {
    // assert GSumInt(m) == 0;
@@ -135,13 +135,13 @@ function FSumInt(m : multiset<int>) : int
    var x := minInt(m);
    x + FSumInt(m - multiset{x})
 }
-ghost function {:opaque} GSumInt(m: multiset<int>) : int
+ghost function GSumInt(m: multiset<int>) : int
 {
   if m == multiset{} then 0
   else var x :| x in m; x + GSumInt(m - multiset{x})
 }
 
-ghost function {:opaque} GSumNat(m: multiset<nat>) : nat
+ghost function GSumNat(m: multiset<nat>) : nat
 {
   if m == multiset{} then 0
   else var x :| x in m; x + GSumNat(m - multiset{x})
@@ -150,12 +150,12 @@ ghost function {:opaque} GSumNat(m: multiset<nat>) : nat
 lemma GSumPositiveIntNat(m:multiset<nat>)
 //requires forall e | e in m :: e >= 0
 ensures GSumInt(m) == GSumNat(m)
-{ reveal GSumInt(); reveal GSumNat();
+{ //reveal GSumInt(); reveal GSumNat();
   if m == multiset{} {}
   else {
     //reveal GSumNat();
     var x:| x in m && GSumNat(m) == x + GSumNat(m - multiset{x});
-    reveal GSumNat();
+    //reveal GSumNat();
     GSumPositiveIntNat(m - multiset{x});
     GSumIntElemIn(m, x);   
   }
@@ -178,7 +178,7 @@ lemma GSumNatPartes(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>)
 lemma  GSumIntElemIn(A:multiset<int>,i:int)
 requires i in A
 ensures GSumInt(A) == i + GSumInt(A-multiset{i})
-{ reveal GSumInt();
+{ //reveal GSumInt();
   if (A == multiset{}) {}
   else{
     var m :| m in A && GSumInt(A) == GSumInt(A-multiset{m}) + m;
@@ -207,7 +207,7 @@ ensures GSumInt(A+multiset{i}) == i + GSumInt(A)
 lemma GSumIntPartes(A:multiset<int>, P1:multiset<int>, P2:multiset<int>)
     requires P1 <= A && P2 <= A && P1 + P2 == A 
     ensures GSumInt(A) == GSumInt(P1) + GSumInt(P2)
-{ reveal GSumInt();
+{ //reveal GSumInt();
   if (A == multiset{}) {
     assert P1 == multiset{};
     assert P2 == multiset{};
@@ -240,7 +240,7 @@ lemma GSumIntPartes(A:multiset<int>, P1:multiset<int>, P2:multiset<int>)
 
 method {:verify true} mSumaNat(A:multiset<nat>) returns (s:nat)
 ensures s == GSumNat(A)
-{ reveal GSumNat();
+{ //reveal GSumNat();
   var A' := A;
   s := 0; var e:int; 
   
@@ -262,7 +262,7 @@ ensures s == GSumNat(A)
 
 method {:verify true} mSumaInt(A:multiset<int>) returns (s:int)
 ensures s == GSumInt(A)
-{ reveal GSumInt();
+{ //reveal GSumInt();
   var A' := A;
   s := 0; var e:int; 
   

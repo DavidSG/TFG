@@ -2,8 +2,6 @@ include "../Auxiliar/Sum.dfy"
 include "../Problems/ParticionInt.dfy"
 include "../Problems/SumaInt.dfy"
 
-
-
 function ParticionInt_to_SumaInt(A:multiset<int>) : (r:(multiset<int>, int))
 {
     
@@ -14,7 +12,7 @@ function ParticionInt_to_SumaInt(A:multiset<int>) : (r:(multiset<int>, int))
 
 lemma NotSumaInt()
 ensures !SumaInt(multiset{},10)
-{  reveal GSumInt();
+{  //reveal GSumInt();
     assert GSumInt(multiset{}) == 0 != 10;}
 
 lemma ParticionInt_Suma(A:multiset<int>)
@@ -35,7 +33,7 @@ lemma ParticionInt_Suma1(A:multiset<int>)
     
     if (SumaInt(SA,SS)) {
         assert FSumInt(A) % 2 != 1 by{
-            reveal GSumInt();
+            //reveal GSumInt();
             assume FSumInt(A) % 2 == 1;
             assert (SA,SS) == (multiset{},10);
             NotSumaInt();

@@ -2,7 +2,6 @@ include "../Auxiliar/Sum.dfy"
 include "../Problems/SumaNat.dfy"
 include "../Problems/Intervalo.dfy"
 
-
 function SumaNat_to_Intervalo(A:multiset<nat>, S:nat) : (r:(multiset<nat>, nat, nat))
 {
     (A, S, S+1)

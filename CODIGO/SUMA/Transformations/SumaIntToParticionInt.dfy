@@ -24,7 +24,7 @@ lemma SumaInt_ParticionInt1(A:multiset<int>, S:int)
     var PA := SumaInt_to_ParticionInt(A,S);
     // PA = {1, 2, 3, 4, 2(N)}   
     // S = 6
-    reveal GSumInt();
+    //reveal GSumInt();
     if (ParticionInt(PA)) {
         FSumIntComputaGSumInt(A); 
         var N := 2*S - GSumInt(A); // N = 2
@@ -44,7 +44,7 @@ lemma SumaInt_ParticionInt2(A:multiset<int>, S:int)
 {
     // A = {1, 2, 3, 4}, S = 6
     if (SumaInt(A,S)) {
-        reveal GSumInt();
+        //reveal GSumInt();
         FSumIntComputaGSumInt(A);
         var PA := SumaInt_to_ParticionInt(A, S);
         var N := 2*S - GSumInt(A); // N = 2

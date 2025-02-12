@@ -26,7 +26,7 @@ lemma SumaNat_SumaInt1(A:multiset<nat>, S:nat)
         var CNat:multiset<nat> := CInt;
         
 
-        SumNatEqualsSumInt(CNat, CInt);
+        GSumPositiveIntNat(CNat);
         assert CNat <= A && GSumNat(CNat) == S;
     }
 }
@@ -42,7 +42,7 @@ lemma SumaNat_SumaInt2(A:multiset<nat>, S:nat)
 
         var CInt:multiset<int> := CNat;
         
-        SumNatEqualsSumInt(CNat, CInt);
+        GSumPositiveIntNat(CNat);
         assert CInt <= SA && GSumInt(CInt) == SS;
     }
 }
