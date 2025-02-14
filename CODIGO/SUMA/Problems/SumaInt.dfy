@@ -15,7 +15,9 @@ ghost predicate SumaInt(A:multiset<int>, S:int)
 method {:verify true} checkSumaInt(A:multiset<int>, S:int, I:multiset<int>) returns (b:bool)
 ensures b == (I <= A && GSumInt(I) == S)
 { 
-  var suma := mSumaInt(I);
+  var suma := FSumInt(I);
+  FSumIntComputaGSumInt(I);
+  //mSumaInt(I);
   b := I <= A && suma == S; 
 
 }
