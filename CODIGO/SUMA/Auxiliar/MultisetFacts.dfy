@@ -1,9 +1,31 @@
 lemma CommutativeUnion<T>(x:multiset<T>,y:multiset<T>)
 ensures x + y == y + x
-{}
+{
+    if (x == multiset{}) {
+        assert x + y == y + x;
+    }
+    else {
+        var i :| i in x;
+        CommutativeUnion(x-multiset{i}, y);
+        assert x + y == y + x;
+    }
+}
+
 lemma AssociativeUnion<T>(x:multiset<T>,y:multiset<T>,z:multiset<T>)
 ensures x + (y + z) == (x + y) + z
-{}
+{
+    if (x == multiset{} && y == multiset{}) {
+        assert x + (y + z) == (x + y) + z;
+    }
+    else if (y == multiset{}) {
+        assert x + y == y + x;
+    }
+    else {
+        var i :| i in y;
+        AssociativeUnion(x-multiset{i}, y, z);
+        assert x + y == y + x;
+    }
+}
 
 lemma CommutativeAssociativeUnion<T>(x:multiset<T>,y:multiset<T>,z:multiset<T>,u:multiset<T>)
 ensures (x + y) + (z + u) == (x + u) + (y + z)
@@ -17,10 +39,13 @@ lemma IntersectionUnion<T>(x:multiset<T>,y:multiset<T>,z:multiset<T>)
 requires  z >=  x + y
 ensures (x + y) * z == (x * z + y * z)
 { 
+    
 }
+
 lemma IntersectionUnionContained<T>(x:multiset<T>,y:multiset<T>,z:multiset<T>)
 ensures  x * z + y * z >= (x + y) * z
-{    
+{   
+
 }
 
 lemma SubstractUnion<T>(x:multiset<T>,y:multiset<T>)
