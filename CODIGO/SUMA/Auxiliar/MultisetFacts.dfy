@@ -18,11 +18,13 @@ ensures x + (y + z) == (x + y) + z
         assert x + (y + z) == (x + y) + z;
     }
     else if (y == multiset{}) {
+        var i :| i in x;
+        AssociativeUnion(x-multiset{i}, y, z);
         assert x + y == y + x;
     }
     else {
         var i :| i in y;
-        AssociativeUnion(x-multiset{i}, y, z);
+        AssociativeUnion(x, y-multiset{i}, z);
         assert x + y == y + x;
     }
 }
