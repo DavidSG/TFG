@@ -12,3 +12,11 @@ requires s <= graph.0
 {
   forall e | e in graph.1 :: |s * e| > 0
 }
+
+
+method {:verify true} checkVertexCover (graph:Graph, k:int, I:set<Node>) returns (b:bool)
+  requires isValidGraph(graph)
+  ensures b == (I <= graph.0 && isVertexCover(I,graph) && |I| >= k)
+{
+  b := I <= graph.0 && (forall e | e in graph.1 :: |I * e| > 0) && |I| >= k;
+}
