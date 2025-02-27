@@ -29,5 +29,22 @@ requires s <= graph.0
 ensures |s * e| <= 2 
 ensures var u,v :| u in graph.0 && v in graph.0 && u != v && e == {u,v}; 
   s * e == {} || s * e == {u} || s * e == {v} || s * e == e 
+{
+    var u,v :| u in graph.0 && v in graph.0 && u != v && e == {u,v}; 
+    
+    if (u !in s && v !in s) {
+        assert |s * e| == 0 && s * e == {};
+    }
+    else if (u in s && v !in s) {
+        assert s * e == {u} && |s * e| == 1;
+    }
+    else if (u !in s && v in s) {
+        assert s * e == {v} && |s * e| == 1;
+    }
+    else if (u in s && v in s) {
+        assert s * e == {u,v} && |s * e| == 2;
+    }
+
+}
 
 
