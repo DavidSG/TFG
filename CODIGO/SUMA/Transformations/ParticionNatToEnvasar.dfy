@@ -96,7 +96,17 @@ lemma ParticionNat_Envasar1(A:multiset<nat>)
             FSumNatComputaGSumNat(A); assert GSumNat(EA) % 2 == 0;
 
             //Demostrar que multiset{P1,P2} == C
-            assume |C| == 2;
+            assert |C| == 2 by{
+              if |C| == 0 {assert GSumNat(EA)/2 == 0; assert false;}
+              else if |C| == 1 {
+                var e:| e in C && C-multiset{e} == multiset{};
+                assume false;
+
+              }
+            
+
+
+            }
              Multiset2(C); 
              var P1,P2 :| multiset{P1,P2} == C;
 
