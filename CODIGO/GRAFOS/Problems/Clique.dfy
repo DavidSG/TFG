@@ -30,14 +30,12 @@ method checkClique(graph:Graph, k:int, I:set<Node>) returns (b:bool)
   while (I1 != {} && b1)
   invariant I1 <= I 
   invariant b1 == forall u,v | u in I-I1 && v in I && u != v ::{u,v} in graph.1
-  invariant !b1 ==> (exists u,v | u in I && v in I && u != v ::{u,v} !in graph.1)
   {
    var e1 := pick(I1); 
    var I2:= I; var b2:= true;
    while (I2 != {} && b2)
     invariant I2 <= I 
      invariant b2 == forall v | v in I-I2 && e1 != v ::{e1,v} in graph.1
-     invariant !b2 ==> (exists v :: v in I && e1 != v && {e1,v} !in graph.1)
    { 
      var e2 := pick(I2); 
      I2:= I2-{e2};
@@ -48,8 +46,7 @@ method checkClique(graph:Graph, k:int, I:set<Node>) returns (b:bool)
    b1 := b1 && b2;
   }
    
-  assert b1 ==> forall u,v | u in I && v in I && u != v :: {u,v} in graph.1;
-  assert !b1 ==> exists u,v | u in I && v in I && u != v :: {u,v} !in graph.1;
+  assert b1 == forall u,v | u in I && v in I && u != v :: {u,v} in graph.1;
   b := I <= graph.0 && |I| >= k && b1;
   
   
