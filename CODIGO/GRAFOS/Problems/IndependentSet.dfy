@@ -29,7 +29,7 @@ lemma auxIndependentSet1 (IndepSet:set<Node>, graph:Graph)
       assume exists e | e in graph.1 :: |IndepSet * e| > 1;
       var e :| e in graph.1 && |IndepSet * e| > 1;
       var u,v :| u in graph.0 && v in graph.0 && u !=v && e == {u,v};
-      intersect(IndepSet,graph,e);
+      intersect(IndepSet,graph,e,u,v);
 
       assert u in IndepSet && v in IndepSet && u != v && {u,v} in graph.1; //La contradiccion
       assert false;  
