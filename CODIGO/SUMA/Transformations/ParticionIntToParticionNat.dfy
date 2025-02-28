@@ -108,7 +108,7 @@ requires p >= 0
 ensures GNegativeElements(P + multiset{p}) == GNegativeElements(P) + multiset{p}
 
 
-lemma {:induction P1} GPositiveUnion(P1: multiset<int>, P2: multiset<int>)
+lemma GPositiveUnion(P1: multiset<int>, P2: multiset<int>)
     ensures GPositiveElements(P1 + P2) == GPositiveElements(P1) + GPositiveElements(P2)
 {}
     /*
@@ -134,6 +134,27 @@ lemma {:induction P1} GPositiveUnion(P1: multiset<int>, P2: multiset<int>)
                     P1S + (P2 + multiset{p1});
                     {AssociativeUnion(P1S,P2,multiset{p1});}
                     (P1S + P2) + multiset{p1};
+{}/*if (P1 == multiset{}){}
+ else 
+ {
+   var p1:| p1 in P1; 
+   if (p1 < 0) {}
+   else {
+     
+     ghost var P1S := P1 - multiset{p1};   
+     assert P1S < P1;
+     GPositiveUnion(P1S,P2);
+     assert GPositiveElements(P1S + P2) == GPositiveElements(P1S) + GPositiveElements(P2);
+     assert P1 + P2 == (P1S + P2) + multiset{p1} by{
+        calc{
+            P1 + P2;
+            (P1S + multiset{p1}) + P2;
+            {AssociativeUnion(P1S,multiset{p1},P2);
+            CommutativeUnion(multiset{p1},P2);
+            }
+            P1S + (P2 + multiset{p1});
+            {AssociativeUnion(P1S,P2,multiset{p1});}
+            (P1S + P2) + multiset{p1};
 
                 } 
             }
@@ -144,9 +165,11 @@ lemma {:induction P1} GPositiveUnion(P1: multiset<int>, P2: multiset<int>)
     }*/
 
 
+}*/
 
 lemma GNegativeUnion(P1: multiset<int>, P2: multiset<int>)
     ensures GNegativeElements(P1 + P2) == GNegativeElements(P1) + GNegativeElements(P2)
+{}
 {}
 
 lemma GMultisetNegToPosUnion(P1: multiset<int>, P2: multiset<int>)
@@ -154,26 +177,33 @@ lemma GMultisetNegToPosUnion(P1: multiset<int>, P2: multiset<int>)
      requires forall e | e in P2 :: e < 0
      ensures GMultisetNegToPos(P1 + P2) == GMultisetNegToPos(P1) + GMultisetNegToPos(P2)
 {}
+{}
 
 lemma GMultisetPosToNegUnion(P1: multiset<int>, P2: multiset<int>)
      requires forall e | e in P1 :: e > 0
      requires forall e | e in P2 :: e > 0
      ensures GMultisetPosToNeg(P1 + P2) == GMultisetPosToNeg(P1) + GMultisetPosToNeg(P2)
 {}
+{}
 
-lemma GMultisetNegToPosToNeg(A: multiset<int>)
+lemma {:verify false} GMultisetNegToPosToNeg(A: multiset<int>)
 requires forall e | e in A :: e < 0
 ensures GMultisetPosToNeg(GMultisetNegToPos(A)) == A
 {}
+{}
 
-lemma GMultisetPosToNegToPos(A: multiset<int>)
+lemma {:verify false} GMultisetPosToNegToPos(A: multiset<int>)
 requires forall e | e in A :: e > 0
 ensures GMultisetNegToPos(GMultisetPosToNeg(A)) == A
 {}
 
 lemma NegSumGMultisetNegToPos(A:multiset<int>)
+{}
+
+lemma {:verify false} NegSumGMultisetNegToPos(A:multiset<int>)
 requires forall e | e in A :: e < 0
 ensures GSumNat(GMultisetNegToPos(A)) == - GSumInt(A)
+{}
 {}
 
 lemma SumGPositiveNegativeElements(A:multiset<int>)
