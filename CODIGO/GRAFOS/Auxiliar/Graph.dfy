@@ -31,20 +31,43 @@ ensures var u,v :| u in graph.0 && v in graph.0 && u != v && e == {u,v};
   s * e == {} || s * e == {u} || s * e == {v} || s * e == e 
 {
     var u,v :| u in graph.0 && v in graph.0 && u != v && e == {u,v}; 
-    
-    if (u !in s && v !in s) {
-        assert |s * e| == 0 && s * e == {};
+    //s * e != {} && s * e != {u} && s * e != {v} && s * e != e && 
+    if (|s * e| > 2 )
+    {
+     //assert (u !in s && v !in s) || (u in s && v !in s) || (u !in s && v in s) || (u in s && v in s);
+     if (u !in s && v !in s) {
+        assert |s * e| == 0 && s * e == {}; assert false;
+     }
+     else if (u in s && v !in s) {
+        assert s * e == {u} && |s * e| == 1; assert false;
+     }
+     else if (u !in s && v in s) {
+        assert s * e == {v} && |s * e| == 1;assert false;
+     }
+     else if (u in s && v in s) {
+        assert s * e == {u,v} && |s * e| == 2;assert false;
+        
+     }
+     assert s * e == {} || s * e == {u} || s * e == {v} || s * e == e ;
+     assert false;
     }
-    else if (u in s && v !in s) {
-        assert s * e == {u} && |s * e| == 1;
-    }
-    else if (u !in s && v in s) {
-        assert s * e == {v} && |s * e| == 1;
-    }
-    else if (u in s && v in s) {
-        assert s * e == {u,v} && |s * e| == 2;
-    }
+    assert |s * e| <= 2; 
+    assert  forall z | z in s && z != u && z != v :: z !in s * e;  
 
+    if (u !in s && v !in s) {
+        assert s * e == {}; 
+     }
+     else if (u in s && v !in s) {
+        assert s * e == {u};
+     }
+     else if (u !in s && v in s) {
+        assert s * e == {v};
+     }
+     else if (u in s && v in s) {
+        assert s * e == {u,v};}
+    assert s * e == {} || s * e == {u} || s * e == {v} || s * e == e ;
+
+    //assume false;
 }
 
 
