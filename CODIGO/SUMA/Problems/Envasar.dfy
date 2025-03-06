@@ -9,7 +9,7 @@ ghost predicate Envasar(A:multiset<nat>, E:nat, k:nat)
 { 
   exists I:multiset<multiset<nat>> :: 
    && |I| <= k 
-   && GUnion(I) == A
+   && Union(I) == A
    && forall e | e in I :: (e <= A && GSumNat(e) <= E)
     
 }
@@ -21,12 +21,13 @@ ensures l in m && (forall x | x in m :: GSumNat(l) <= GSumNat(l))
 
 // UNION
 
-ghost function GUnion (I:multiset<multiset<nat>>) : multiset<nat>
+ghost function Union (I:multiset<multiset<nat>>) : multiset<nat>
 {
   if I == multiset{} then multiset{}
-  else var i :| i in I; i + GUnion(I-multiset{i})
+  else var i :| i in I; i + Union(I-multiset{i})
 }
 
+/*
 function FUnion (I:multiset<multiset<nat>>) : multiset<nat>
 {
   if I == multiset{} then multiset{}
@@ -53,9 +54,10 @@ ensures FUnion(m) == GUnion(m)
     assume FUnion(m) == GUnion(m);
   }
 }
+*/
 
 // VERIFICACION
-
+/*
 method {:verify true} checkEnvasar(A:multiset<nat>, E:nat, k:nat, I:multiset<multiset<nat>>) returns (b:bool)
 ensures b ==  (|I| <= k 
              && GUnion(I) == A )
@@ -63,4 +65,4 @@ ensures b ==  (|I| <= k
 {
   FUnionComputaGUnion(I);
   b := |I| <= k && FUnion(I) == A;
-}
+}*/
