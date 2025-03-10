@@ -152,9 +152,7 @@ lemma N2IsEven(A: int)
 lemma Equality(A: multiset<nat>, P1: multiset<nat>, P2: multiset<nat>)
     requires P1 <= A && P2 <= A && P1 + P2 == A
     ensures GSumNat(P1) == GSumNat(P2) <==> GSumNat(P1) == GSumNat(A)/2 && GSumNat(P2) == GSumNat(A)/2
-{
 
-}
 
 lemma ParticionImpar(A: multiset<nat>) 
     ensures ParticionNat(A) ==> FSumNat(A) % 2 == 0
@@ -186,14 +184,10 @@ lemma ParticionNat_Envasar2(A:multiset<nat>)
     if (ParticionNat(A)) {
         var (EA,EE,Ek) := ParticionNat_to_Envasar(A);
 
-        //assert
         ParticionImpar(A);
 
         assert FSumNat(A) % 2 == 0;
         assert A == EA;
-
-        var aux:multiset<nat> := multiset{1,2,3};
-        var x:multiset<nat> :| x <= aux;
 
         var P1:multiset<nat>, P2:multiset<nat> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2); // {1,2} {3}
         var C: multiset<multiset<nat>> := multiset{P1,P2}; // { {1,2}, {3}}
@@ -204,13 +198,16 @@ lemma ParticionNat_Envasar2(A:multiset<nat>)
         //POST: assert Union(C) == P1 + P2;
         assert P1 + P2 == EA;
         assume Union(C) == EA;
-                
-        assert P1 <= EA && P2 <= EA;
+
 
         // GSumNat(P1) <= EE && GSumNat(P2) <= EE
         FSumNatComputaGSumNat(A); // FSumInt(A)/2 && FSumInt(A) == GSumInt(A)(Funcion) => GSumInt(A)/2 == EE => GSumInt(A) = 2*EE
         GSumNatPartes(A,P1,P2); // Sum(A) = Sum (P1+P2)(Funcion) && Sum(P1) == Sum (P2) && Sum(A) = 2*EE => P1 == P2 == EE
-
-        assert |C| <= Ek && Union(C) == EA && forall e | e in C :: e <= EA && GSumNat(e) <= EE;
+        
+        assume |C| <= Ek;
+        //assert P1 <= A && P2 <= A;
+        
+        assume forall e | e in C :: (e <= EA && GSumNat(e) <= EE);
+        assert |C| <= Ek && Union(C) == EA && forall e | e in C :: (e <= EA && GSumNat(e) <= EE);
     }
 }
