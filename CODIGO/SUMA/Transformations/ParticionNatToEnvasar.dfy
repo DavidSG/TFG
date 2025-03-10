@@ -145,21 +145,36 @@ lemma ParticionNat_Envasar1(A:multiset<nat>)
         */
     }
 }
+lemma N2IsEven(A: int) 
+    ensures (2*A) % 2 == 0
+{}
 
-lemma ParticionImpar() 
-    ensures !exists A:multiset<nat> | ParticionNat(A) :: FSumNat(A) % 2 == 1
+lemma Equality(A: multiset<nat>, P1: multiset<nat>, P2: multiset<nat>)
+    requires P1 <= A && P2 <= A && P1 + P2 == A
+    ensures GSumNat(P1) == GSumNat(P2) <==> GSumNat(P1) == GSumNat(A)/2 && GSumNat(P2) == GSumNat(A)/2
 {
-    var A:multiset<nat> :| GSumNat(A) % 2 == 1;
+
+}
+
+lemma ParticionImpar(A: multiset<nat>) 
+    ensures ParticionNat(A) ==> FSumNat(A) % 2 == 0
+{   
     assume FSumNat(A) % 2 == 1;
-
     FSumNatComputaGSumNat(A);
-
     assert !exists P1:multiset<nat>, P2:multiset<nat> | P1 <= A && P2 <= A && P1 + P2 == A :: GSumNat(P1) == GSumNat(P2) by {
+        var P1:multiset<nat>, P2:multiset<nat> :| P1 <= A && P2 <= A && P1 + P2 == A;
+        assume GSumNat(P1) == GSumNat(P2);
+        Equality(A,P1,P2); // P1 y P2 tienen que sumar la mitad de A para ser iguales
+        GSumNatPartes(A,P1,P2);
+        
+        var half := GSumNat(A)/2;
+        N2IsEven(half); // Si hay dos mitades que suman lo mismo, A tiene que ser par
 
+        assert GSumNat(A) % 2 == 0; // CONTRADICCION, A tiene que ser par
 
-        assume !exists P1:multiset<nat>, P2:multiset<nat> | P1 <= A && P2 <= A && P1 + P2 == A :: GSumNat(P1) == GSumNat(P2);
+        assert false;
     }
-
+    
     assume false;
 }
 
@@ -171,9 +186,14 @@ lemma ParticionNat_Envasar2(A:multiset<nat>)
     if (ParticionNat(A)) {
         var (EA,EE,Ek) := ParticionNat_to_Envasar(A);
 
-        ParticionImpar();
+        //assert
+        ParticionImpar(A);
+
         assert FSumNat(A) % 2 == 0;
         assert A == EA;
+
+        var aux:multiset<nat> := multiset{1,2,3};
+        var x:multiset<nat> :| x <= aux;
 
         var P1:multiset<nat>, P2:multiset<nat> :| P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2); // {1,2} {3}
         var C: multiset<multiset<nat>> := multiset{P1,P2}; // { {1,2}, {3}}
