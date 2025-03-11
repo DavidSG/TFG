@@ -24,16 +24,26 @@ lemma ParticionNat_Envasar(A:multiset<nat>)
 lemma UnionOne(C: multiset<multiset<nat>>, P1:multiset<nat>)
 requires P1 in C
 ensures Union(C) == P1 + Union(C-multiset{P1})
-/*{ var i:| i in C && Union(C) == i + Union(C-multiset{i});
- if (i == P1){   
- }
- else {
-    assert P1 in C-multiset{i};
-    UnionOne(C-multiset{i},P1);
-    
+{ 
+    var i:| i in C && Union(C) == i + Union(C-multiset{i});
+    if (i == P1) {
+
     }
- 
-}*/
+    else {
+        assert P1 in C-multiset{i};
+        UnionOne(C-multiset{i},P1);
+
+        assert C + multiset{i} - multiset{i} == C;
+        assert Union(C-multiset{i}) == P1 + Union(C-multiset{i}-multiset{P1});
+        assert Union(C-multiset{i}) + i == P1 + Union(C-multiset{i}-multiset{P1}) + i;
+        assert Union(C) == Union(C-multiset{i}) + i;
+
+        //assert Union(C-multiset{P1}) == Union(C-multiset{i}-multiset{P1}) + i;
+        assume P1 + Union(C-multiset{P1}) == P1 + Union(C-multiset{i}-multiset{P1}) + i;
+        assert Union(C) == P1 + Union(C-multiset{P1});
+    }
+
+}
 
 lemma Union2(C: multiset<multiset<nat>>,P1: multiset<nat>, P2: multiset<nat>)
 requires C == multiset{P1,P2}
@@ -214,6 +224,7 @@ lemma ParticionNat_Envasar2(A:multiset<nat>)
         assert |C| <= Ek && Union(C) == EA && forall e | e in C :: (e <= EA && GSumNat(e) <= EE);
     }
 }
+
 /*
 lemma ParticionNat_Envasar2(A:multiset<nat>)
     ensures var (EA,EE,Ek) := ParticionNat_to_Envasar(A);
