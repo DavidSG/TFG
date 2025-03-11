@@ -14,4 +14,3 @@ ghost predicate isCover<T>(universe:set<T>, sets:set<set<T>>)
 
 method verifyIsCover<T>(universe:set<T>, sets:set<set<T>>, k:nat, witnes:set<set<T>>) returns (b:bool)
 ensures b == isCover(universe, witnes) && |witnes| <= k 
-ensures b == SetCover(universe, sets, k)

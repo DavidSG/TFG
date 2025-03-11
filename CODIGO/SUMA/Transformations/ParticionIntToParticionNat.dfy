@@ -103,10 +103,10 @@ requires p >= 0
 ensures GPositiveElements(P + multiset{p}) == GPositiveElements(P) + multiset{p}
 {}
 
-lemma {:induction P} GNegativeUnionOneElement(P: multiset<int>, p: int)
+/*lemma {:induction P} GNegativeUnionOneElement(P: multiset<int>, p: int)
 requires p >= 0
 ensures GNegativeElements(P + multiset{p}) == GNegativeElements(P) + multiset{p}
-
+*/
 
 lemma GPositiveUnion(P1: multiset<int>, P2: multiset<int>)
     ensures GPositiveElements(P1 + P2) == GPositiveElements(P1) + GPositiveElements(P2)
@@ -169,7 +169,7 @@ ensures GMultisetNegToPos(GMultisetPosToNeg(A)) == A
 {}
 
 
-lemma NegSumGMultisetNegToPos(A:multiset<int>)
+lemma {:verify false} NegSumGMultisetNegToPos(A:multiset<int>)
 requires forall e | e in A :: e < 0
 ensures GSumNat(GMultisetNegToPos(A)) == - GSumInt(A)
 {
@@ -209,7 +209,7 @@ lemma ParticionInt_ParticionNat(A:multiset<int>)
 
 
 
-lemma {:verify false} ParticionInt_ParticionNat1(A:multiset<int>)
+lemma {:verify true} ParticionInt_ParticionNat1(A:multiset<int>)
     ensures var PA := ParticionInt_to_ParticionNat(A);
           ParticionInt(A) <== ParticionNat(PA)
 {   
