@@ -6,8 +6,7 @@ include "../Auxiliar/Sum.dfy"
 // los elementos del vector en dos partes disjuntas, y cuya union sea A, que sumen lo mismo .
 ghost predicate ParticionNat(A:multiset<nat>)
 {
-  exists P1:multiset<nat>, P2:multiset<nat> | 
-    P1 <= A && P2 <= A && P1 + P2 == A :: GSumNat(P1) == GSumNat(P2)
+  exists P1:multiset<nat>, P2:multiset<nat> | P1 <= A && P2 <= A && P1 + P2 == A :: GSumNat(P1) == GSumNat(P2)
 }
 
 method {:verify true} checkParticionNat(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>) returns (b:bool)
