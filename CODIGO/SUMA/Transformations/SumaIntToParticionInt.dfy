@@ -22,18 +22,20 @@ lemma SumaInt_ParticionInt1(A:multiset<int>, S:int)
           SumaInt(A,S) <== ParticionInt(PA)
 {   
     var PA := SumaInt_to_ParticionInt(A,S);
-    // PA = {1, 2, 3, 4, 2(N)}   
-    // S = 6
-    //reveal GSumInt();
+
     if (ParticionInt(PA)) {
         FSumIntComputaGSumInt(A); 
-        var N := 2*S - GSumInt(A); // N = 2
+        var N := 2*S - GSumInt(A); 
         GSumIntPartes(PA,A,multiset{N});
-        
-        var P1 :multiset<int>, P2:multiset<int> :| P1 <= PA && P2 <= PA && P1 + P2 == PA && GSumInt(P1) == GSumInt(P2); // P1 = {2, 4}  ->  Sum(P1) = 6
 
-        GSumIntPartes(PA,P1,P2); // GSumInt(PA) == 2*S && GSumInt(P1) == GSumInt(P2) => GSumInt(P1) == S
-        //assert GSumInt(P1) == GSumInt(P2) == S;
+        // Encontramos dos multisets P1,P2 tal que cumplen ParticionInt(A,S)
+        var P1 :multiset<int>, P2:multiset<int> :| P1 <= PA && P2 <= PA && P1 + P2 == PA && GSumInt(P1) == GSumInt(P2); 
+
+        // Sabemos que PA == P1 + P2, por lo que podemos emplear GSumIntPartes(PA,P1,P2)
+        // Un lemma que asegura que suma(PA) == Suma (P1) + Suma(P2)
+        GSumIntPartes(PA,P1,P2); 
+
+        // P1 cumple SumaInt(A,S) o P2 cumple SumaInt(A,S) ya que el otro tendrá N
         assert (P1 <= A && GSumInt(P1) == S) || (P2 <= A && GSumInt(P2) == S); // Sum(C) == 6
     }
 }
@@ -42,21 +44,22 @@ lemma SumaInt_ParticionInt2(A:multiset<int>, S:int)
     ensures var PA := SumaInt_to_ParticionInt(A, S);
           SumaInt(A,S) ==> ParticionInt(PA)
 {
-    // A = {1, 2, 3, 4}, S = 6
     if (SumaInt(A,S)) {
-        //reveal GSumInt();
+    
         FSumIntComputaGSumInt(A);
         var PA := SumaInt_to_ParticionInt(A, S);
         var N := 2*S - GSumInt(A); // N = 2
         GSumIntPartes(PA,A,multiset{N}); // PA == A + N;
 
+        // Encontramos una solución C a Suma(A,S)
         var C :| C <= A && GSumInt(C) == S;
+
+        // Encontramos la solución a Partición a partir de C
         var P1:multiset<int> := C; var P2:multiset<int> := A-C+multiset{N};
 
         GSumIntPartes(PA,P1,P2);
 
-        assert P1 <= PA && P2 <= PA && P1 + P2 == PA && GSumInt(P1) == GSumInt(P2); // N in PA && GSumInt(C) == GSumInt(PA') == S && C + PA' == PA; // IS <= 6 < IT
-        existsPartition(PA,P1,P2);
+        assert P1 <= PA && P2 <= PA && P1 + P2 == PA && GSumInt(P1) == GSumInt(P2); 
 
     }
 }
