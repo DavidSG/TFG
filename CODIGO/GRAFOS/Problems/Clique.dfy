@@ -13,14 +13,6 @@ ghost predicate isClique(s:set<Node>, graph:Graph)
   forall u,v | u in s && v in s && u != v :: {u,v} in graph.1
 }
 
-method pick<T>(S:set<T>) returns (r:T)
-  requires S != {} //&& |S| > 0
-  ensures r in S
-{
-  var v :| v in S;
-  return v;
-}
-
 method checkClique(graph:Graph, k:int, I:set<Node>) returns (b:bool)
   requires isValidGraph(graph)
   ensures b == (I <= graph.0 && isClique(I,graph) && |I| >= k)
@@ -48,7 +40,6 @@ method checkClique(graph:Graph, k:int, I:set<Node>) returns (b:bool)
    
   assert b1 == forall u,v | u in I && v in I && u != v :: {u,v} in graph.1;
   b := I <= graph.0 && |I| >= k && b1;
-  
   
 }
 
