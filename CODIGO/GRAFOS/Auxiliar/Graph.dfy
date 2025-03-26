@@ -13,6 +13,14 @@ ensures isValidGraph(r)
     (complementGraph)
 }
 
+method pick<T>(S:set<T>) returns (r:T)
+  requires S != {} //&& |S| > 0
+  ensures r in S
+{
+  var v :| v in S;
+  return v;
+}
+
 
 predicate isValidGraph(graph: Graph)
 {
