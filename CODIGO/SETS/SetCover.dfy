@@ -23,5 +23,26 @@ method pick<T>(S:set<T>) returns (r:T)
 method verifyIsCover<T>(universe:set<T>, sets:set<set<T>>, k:nat, I:set<set<T>>) returns (b:bool)
 ensures b == isCover(universe, I) && |I| <= k 
 {
-  
+  var u := universe;
+  var b1:= true;
+  while (u != {} && b1)
+  invariant u <= universe 
+  invariant b1 == forall u1 | u1 in universe - u :: (exists s | s in I :: u1 in s)
+  {
+   var e1 := pick(u); 
+   var s := I; var b2:= false;
+   while (s != {} && !b2)
+     invariant s <= I
+     invariant b2 == exists s1 | s1 in I - s :: e1 in s1
+   { 
+      var e2 := pick(s); 
+      b2 := e1 in e2;
+      s:= s-{e2};
+   }
+   b1 := b1 && b2;
+   u := u - {e1};  
+  }
+   
+  assert b1 == forall u1 | u1 in universe - u :: (exists s | s in I :: u1 in s);
+  b := I <= sets && |I| <= k && b1;
 }
