@@ -13,14 +13,6 @@ requires s <= graph.0
   forall e | e in graph.1 :: |s * e| > 0
 }
 
-method pick<T>(S:set<T>) returns (r:T)
-  requires S != {} //&& |S| > 0
-  ensures r in S
-{
-  var v :| v in S;
-  return v;
-}
-
 
 method {:verify true} checkVertexCover (graph:Graph, k:int, I:set<Node>) returns (b:bool)
   requires isValidGraph(graph)
@@ -39,5 +31,5 @@ method {:verify true} checkVertexCover (graph:Graph, k:int, I:set<Node>) returns
   }
    
   assert b1 == forall e | e in graph.1 :: |I * e| > 0;
-  b := I <= graph.0 && |I| <= k && b1;
+  b := I <= graph.0 && |I| >= k && b1;
 }
