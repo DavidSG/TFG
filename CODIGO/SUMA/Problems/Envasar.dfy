@@ -56,13 +56,33 @@ ensures FUnion(m) == GUnion(m)
 }
 */
 
+method pick<T>(S:multiset<T>) returns (r:T)
+  requires S != multiset{} //&& |S| > 0
+  ensures r in S
+{
+  var v :| v in S;
+  return v;
+}
+
 // VERIFICACION
-/*
 method {:verify true} checkEnvasar(A:multiset<nat>, E:nat, k:nat, I:multiset<multiset<nat>>) returns (b:bool)
 ensures b ==  (|I| <= k 
-             && GUnion(I) == A )
-             //&& forall e | e in I :: e <= A && GSumNat(e) <= E )
+             //&& Union(I) == A )
+             && forall e | e in I :: (e <= A && GSumNat(e) <= E))
 {
-  FUnionComputaGUnion(I);
-  b := |I| <= k && FUnion(I) == A;
-}*/
+  var envases := I;
+  var b1:= true;
+  while (envases != multiset{} && b1)
+  invariant envases <= I
+  invariant b1 == forall e | e in I :: (e <= A && GSumNat(e) <= E)
+  {
+    var e1 := pick(envases); 
+    FSumNatComputaGSumNat(e1);
+    {b1 := b1 && e1 <= A && FSumNat(e1) <= E;}
+
+    envases := envases - multiset{e1};
+  }
+   
+  assert b1 == forall e | e in I :: (e <= A && GSumNat(e) <= E);
+  b := |I| <= k && b1;
+}
