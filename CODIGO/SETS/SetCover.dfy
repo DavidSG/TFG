@@ -12,5 +12,16 @@ ghost predicate isCover<T>(universe:set<T>, sets:set<set<T>>)
   forall u | u in universe :: (exists s | s in sets :: u in s)
 }
 
-method verifyIsCover<T>(universe:set<T>, sets:set<set<T>>, k:nat, witnes:set<set<T>>) returns (b:bool)
-ensures b == isCover(universe, witnes) && |witnes| <= k 
+method pick<T>(S:set<T>) returns (r:T)
+  requires S != {} //&& |S| > 0
+  ensures r in S
+{
+  var v :| v in S;
+  return v;
+}
+
+method verifyIsCover<T>(universe:set<T>, sets:set<set<T>>, k:nat, I:set<set<T>>) returns (b:bool)
+ensures b == isCover(universe, I) && |I| <= k 
+{
+  
+}
