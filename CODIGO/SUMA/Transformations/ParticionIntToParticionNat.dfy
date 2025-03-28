@@ -168,8 +168,8 @@ requires forall e | e in A :: e > 0
 ensures GMultisetNegToPos(GMultisetPosToNeg(A)) == A
 {}
 
-
-lemma {:verify false} NegSumGMultisetNegToPos(A:multiset<int>)
+// Nuevo 
+lemma  NegSumGMultisetNegToPos(A:multiset<int>)
 requires forall e | e in A :: e < 0
 ensures GSumNat(GMultisetNegToPos(A)) == - GSumInt(A)
 {
@@ -177,9 +177,26 @@ ensures GSumNat(GMultisetNegToPos(A)) == - GSumInt(A)
 
     }
     else {
-         
+        var i :| i in A;
+        NegSumGMultisetNegToPos(A-multiset{i});
+        calc {
+            - GSumInt(A);
+            {GSumIntPartes(A,A-multiset{i},multiset{i});}
+            - i - GSumInt(A-multiset{i});
+        }
+
+        calc {
+            GSumNat(GMultisetNegToPos(A));
+            {assume GMultisetNegToPos(A) == multiset{-i} + GMultisetNegToPos(A-multiset{i});
+            GSumNatPartes(GMultisetNegToPos(A),multiset{-i},GMultisetNegToPos(A-multiset{i}));}
+            - i + GSumNat(GMultisetNegToPos(A-multiset{i}));
+        }
+
+        assert GSumNat(GMultisetNegToPos(A)) == - GSumInt(A);
+        
     }
 }
+// NUEVO ^^^^^^^^^^
 
 lemma SumGPositiveNegativeElements(A:multiset<int>)
 ensures GSumNat(GPositiveElements(A)) == GSumInt(GPositiveElements(A))
