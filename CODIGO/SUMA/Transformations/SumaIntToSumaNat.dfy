@@ -105,17 +105,20 @@ ensures r == GNegativeElements(A)
 }
 
 
+lemma dafnyEsTonto(A:multiset<int>, x:int, i:int)
+requires x >= FSumNat(FMultisetAbs(A))
+ensures i + x >= 0
 
 function FMultisetAdd(A:multiset<int>, x:int) : (r:(multiset<nat>)) 
-requires x >=  FSumNat(FMultisetAbs(A))
-ensures forall e | e in A :: e + x !in A && e + x in r
-{  
+requires x >= FSumNat(FMultisetAbs(A))
+ensures forall e | e in A :: A[e] == r[e+x]
+/*{  
     if A == multiset{} then multiset{}
     else 
         var i := minInt(A);
-        assume i + x > 0;
+        assert i + x >= 0;
         (multiset{i+x} + FMultisetAdd(A - multiset{i},x))
-}
+}*/
 
 function repeat(value:nat, amount:nat) : (r:(multiset<nat>)) 
 ensures r[value] == amount
