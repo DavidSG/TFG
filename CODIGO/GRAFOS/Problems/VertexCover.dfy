@@ -25,7 +25,7 @@ method {:verify true} checkVertexCover (graph:Graph, k:int, I:set<Node>) returns
   invariant b1 == forall e | e in graph.1 - edges :: |I * e| > 0
   {
     var e1 := pick(edges); 
-    {b1 := b1 && |I * e1| > 0;}
+    b1 := b1 && |I * e1| > 0;
 
     edges := edges - {e1};
   }
