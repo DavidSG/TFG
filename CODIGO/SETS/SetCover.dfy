@@ -8,7 +8,6 @@ ghost predicate SetCover<T>(U:set<T>, S: set<set<T>>, k:nat)
 }
 
 ghost predicate isCover<T>(universe:set<T>, sets:set<set<T>>)
-requires forall s | s in sets :: s <= universe
 {
   forall u | u in universe :: (exists s | s in sets :: u in s)
 }
@@ -29,7 +28,7 @@ ensures b == (I <= sets && isCover(universe, I) && |I| <= k)
   var b1:= true;
   while (u != {} && b1)
   invariant u <= universe 
-  invariant b1 == forall u1 | u1 in universe - u :: (exists s | s in I :: u1 in s)
+  invariant b1 == isCover(universe-u,I)//forall u1 | u1 in universe - u :: (exists s | s in I :: u1 in s)
   {
    var e1 := pick(u); 
    var s := I; var b2:= false;
