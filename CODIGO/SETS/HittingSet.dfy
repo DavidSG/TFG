@@ -30,11 +30,11 @@ method checkHittingSet<T>(universe:set<T>, sets:set<set<T>>, k:nat, I:set<T>) re
   invariant b1 == forall s1 | s1 in sets - s :: I * s1 != {}
   {
     var e1 := pick(s); 
-    {b1 := b1 && I * e1 != {};}
-
     s := s - {e1};
+
+    b1 := b1 && I * e1 != {};
   }
    
   assert b1 == forall s1 | s1 in sets :: I * s1 != {};
-  b := I <= universe && |I| >= k && b1;
+  b := b1 && I <= universe && |I| >= k;
 }
