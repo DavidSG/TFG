@@ -1,4 +1,6 @@
 include "../Auxiliar/Sum.dfy"
+include "../Auxiliar/MultisetFacts.dfy"
+
 
 // DEFINICION DEL PROBLEMA ENVASAR
 
@@ -15,47 +17,6 @@ ghost predicate Envasar(A:multiset<nat>, E:nat, k:nat)
 }
 
 
-function minMultiset (m:multiset<multiset<nat>>): (l:multiset<nat>)
-requires m != multiset{}
-ensures l in m && (forall x | x in m :: GSumNat(l) <= GSumNat(l)) 
-
-// UNION
-
-ghost function Union (I:multiset<multiset<nat>>) : multiset<nat>
-{
-  if I == multiset{} then multiset{}
-  else var i :| i in I; i + Union(I-multiset{i})
-}
-
-/*
-function FUnion (I:multiset<multiset<nat>>) : multiset<nat>
-{
-  if I == multiset{} then multiset{}
-  else var i := minMultiset(I); i + FUnion(I-multiset{i})
-}
-
-lemma {:induction m} GUnionPartes(m : multiset<multiset<nat>>, x : multiset<nat>)
-ensures GUnion(m) == x + GUnion(m - multiset{x})
-
-
-lemma {:induction m} FUnionComputaGUnion(m : multiset<multiset<nat>>)
-ensures FUnion(m) == GUnion(m)
-{ 
-  if m == multiset{} {
-    assert FUnion(m) == GUnion(m);
-  }
-  else {
-    var x :| x in m;
-    FUnionComputaGUnion(m - multiset{x});
-    assert FUnion(m - multiset{x}) == GUnion(m-multiset{x});
-
-    assume FUnion(m) == x + FUnion(m-multiset{x});
-    assume x + FUnion(m) == x + GUnion(m - multiset{x});
-    assume FUnion(m) == GUnion(m);
-  }
-}
-*/
-
 method pick<T>(S:multiset<T>) returns (r:T)
   requires S != multiset{} //&& |S| > 0
   ensures r in S
@@ -65,24 +26,36 @@ method pick<T>(S:multiset<T>) returns (r:T)
 }
 
 // VERIFICACION
-method {:verify true} checkEnvasar(A:multiset<nat>, E:nat, k:nat, I:multiset<multiset<nat>>) returns (b:bool)
+method checkEnvasar(A:multiset<nat>, E:nat, k:nat, I:multiset<multiset<nat>>) returns (b:bool)
 ensures b ==  (|I| <= k 
-             //&& Union(I) == A )
+             && Union(I) == A 
              && forall e | e in I :: (e <= A && GSumNat(e) <= E))
 {
   var envases := I;
   var b1:= true;
+  var union:multiset<nat> := multiset{};
   while (envases != multiset{} && b1)
   invariant envases <= I
-  invariant b1 == forall e | e in I :: (e <= A && GSumNat(e) <= E)
-  {
-    var e1 := pick(envases); 
-    FSumNatComputaGSumNat(e1);
-    {b1 := b1 && e1 <= A && FSumNat(e1) <= E;}
+  invariant b1 == forall e | e in I - envases :: (e <= A && GSumNat(e) <= E)
+  invariant union == Union(I-envases)
+  { 
+    
+    ghost var oldenvases := envases;
+    ghost var oldunion := union;
+    assert oldunion == Union(I-oldenvases);
 
+
+    var e1 := pick(envases); 
     envases := envases - multiset{e1};
+    assert I - oldenvases == I-envases-multiset{e1};
+
+    FSumNatComputaGSumNat(e1);
+    b1 := b1 && e1 <= A && FSumNat(e1) <= E;
+    
+    union := union + e1;
+    UnionOne(I-envases,e1);
   }
-   
   assert b1 == forall e | e in I :: (e <= A && GSumNat(e) <= E);
-  b := |I| <= k && b1;
+  assert b1 ==> envases == multiset{} && I-envases == I && union == Union(I);
+  b :=  |I| <= k && b1 && union == A;
 }

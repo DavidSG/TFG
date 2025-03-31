@@ -9,7 +9,7 @@ ghost predicate ParticionNat(A:multiset<nat>)
   exists P1:multiset<nat>, P2:multiset<nat> | P1 <= A && P2 <= A && P1 + P2 == A :: GSumNat(P1) == GSumNat(P2)
 }
 
-method {:verify true} checkParticionNat(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>) returns (b:bool)
+method checkParticionNat(A:multiset<nat>, P1:multiset<nat>, P2:multiset<nat>) returns (b:bool)
 ensures b ==  (P1 <= A && P2 <= A && P1 + P2 == A && GSumNat(P1) == GSumNat(P2))
 { 
   var suma1 := mSumaNat(P1);

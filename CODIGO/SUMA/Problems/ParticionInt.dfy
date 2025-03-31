@@ -18,7 +18,7 @@ requires IsPartitionInt(A,P1,P2)
 ensures ParticionInt(A)
 {}
 
-method {:verify true} checkParticionInt(A:multiset<int>, P1:multiset<int>, P2:multiset<int>) returns (b:bool)
+method checkParticionInt(A:multiset<int>, P1:multiset<int>, P2:multiset<int>) returns (b:bool)
 ensures b ==  (P1 <= A && P2 <= A && P1 + P2 == A && GSumInt(P1) == GSumInt(P2))
 { 
   var suma1 := mSumaInt(P1);

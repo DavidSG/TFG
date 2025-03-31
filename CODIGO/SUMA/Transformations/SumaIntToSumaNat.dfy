@@ -27,13 +27,13 @@ ensures forall e | e in r :: e > 0 && -e in A
 ensures forall e | -e in A :: e in r && r[e] == A[-e]
 //ensures forall e | e in A :: -e in r && r[-e] == A[e]//esto se queda colgado
 ensures |A| == |r|
-/*
+
 {
     if A == multiset{} then multiset{}
     else 
         var m :| m in A; 
         (multiset{-m} + GMultisetNegToPos(A-multiset{m}))
-}*/
+}
 
 function FMultisetNegToPos(A:multiset<int>) : (r:(multiset<int>)) 
 requires forall e | e in A :: e < 0

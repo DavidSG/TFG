@@ -1,6 +1,6 @@
 //Created by: Clara Segura
-include "SetCover.dfy"
-include "HittingSet.dfy"
+include "../Problems/SetCover.dfy"
+include "../Problems/HittingSet.dfy"
 
 lemma tisCover(U: set<int>, S: set<set<int>>) 
 requires forall s | s in S :: s <= U

@@ -1,3 +1,5 @@
+include "../Auxiliar/SetFacts.dfy"
+
 //DEFINICION DEL PROBLEMA SET COVER
 
 ghost predicate SetCover<T>(U:set<T>, S: set<set<T>>, k:nat)
@@ -12,24 +14,23 @@ ghost predicate isCover<T>(universe:set<T>, sets:set<set<T>>)
   forall u | u in universe :: (exists s | s in sets :: u in s)
 }
 
-method pick<T>(S:set<T>) returns (r:T)
-  requires S != {} //&& |S| > 0
-  ensures r in S
-{
-  var v :| v in S;
-  return v;
-}
 
-method verifyIsCover<T>(universe:set<T>, sets:set<set<T>>, k:nat, I:set<set<T>>) returns (b:bool)
-ensures b == isCover(universe, I) && |I| <= k 
+
+method verifyIsCover<T>(universe:set<T>, sets:set<set<T>>, k:nat, I:set<set<T>>) returns (b:bool)   
+requires forall s | s in sets :: s <= universe
+ensures b == (I <= sets && isCover(universe, I) && |I| <= k)
 {
   var u := universe;
   var b1:= true;
+
   while (u != {} && b1)
   invariant u <= universe 
-  invariant b1 == forall u1 | u1 in universe - u :: (exists s | s in I :: u1 in s)
+  invariant b1 == isCover(universe-u,I)
   {
+   ghost var oldu := u;
    var e1 := pick(u); 
+   u := u - {e1};  
+
    var s := I; var b2:= false;
    while (s != {} && !b2)
      invariant s <= I
@@ -40,9 +41,8 @@ ensures b == isCover(universe, I) && |I| <= k
       s:= s-{e2};
    }
    b1 := b1 && b2;
-   u := u - {e1};  
+   assert universe - u == universe - oldu + {e1}; 
   }
-   
-  assert b1 == forall u1 | u1 in universe - u :: (exists s | s in I :: u1 in s);
-  b := I <= sets && |I| <= k && b1;
+  assert b1 ==> u == {} &&  universe-u == universe;
+  b := b1 && I <= sets && |I| <= k ;
 }
