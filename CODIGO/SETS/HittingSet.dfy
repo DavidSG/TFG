@@ -25,6 +25,7 @@ method checkHittingSet<T>(universe:set<T>, sets:set<set<T>>, k:nat, I:set<T>) re
 {
   var s := sets;
   var b1:= true;
+  
   while (s != {} && b1)
   invariant s <= sets
   invariant b1 == forall s1 | s1 in sets - s :: I * s1 != {}
