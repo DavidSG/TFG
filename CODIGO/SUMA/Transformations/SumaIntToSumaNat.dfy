@@ -3,7 +3,6 @@ include "../Problems/SumaInt.dfy"
 include "../Problems/SumaNat.dfy"
 
 function MultisetIntToNat(A:multiset<int>) : (r:(multiset<nat>))
-    requires forall e | e in A :: e > -10 && e < 10
 {
     if (|A| == 0) then multiset{}
     else
@@ -109,14 +108,17 @@ lemma dafnyEsTonto(A:multiset<int>, x:int, i:int)
 requires x >= FSumNat(FMultisetAbs(A))
 ensures i + x >= 0
 
+
 function FMultisetAdd(A:multiset<int>, x:int) : (r:(multiset<nat>)) 
-requires x >= FSumNat(FMultisetAbs(A))
+//requires x >= FSumNat(FMultisetAbs(A))
+ensures forall e | e in A :: e+x in r
 ensures forall e | e in A :: A[e] == r[e+x]
+ensures forall e | e in r :: A[e-x] == r[e+x]
+ensures |A| == |r|
 /*{  
     if A == multiset{} then multiset{}
     else 
         var i := minInt(A);
-        assert i + x >= 0;
         (multiset{i+x} + FMultisetAdd(A - multiset{i},x))
 }*/
 
@@ -166,6 +168,14 @@ lemma SumaInt_SumaNat1(A:multiset<int>, S:int)
     }
 }
 
+lemma sumaAbs(A:multiset<int>, CInt:multiset<int>)
+requires CInt <= A
+ensures FSumNat(FMultisetAbs(CInt)) <= FSumNat(FMultisetAbs(A))
+
+lemma subconjuntoMenosElementos(A:multiset, B:multiset)
+requires B <= A
+ensures |B| <= |A|
+
 lemma SumaInt_SumaNat2(A:multiset<int>, S:int)
     ensures var (SA, SS) := SumaInt_to_SumaNat(A, S);
           SumaInt(A,S) ==> SumaNat(SA,SS)
@@ -175,7 +185,22 @@ lemma SumaInt_SumaNat2(A:multiset<int>, S:int)
         var (SA, SS) := SumaInt_to_SumaNat(A, S);
         var CInt:multiset<int> :| CInt <= A && GSumInt(CInt) == S;
 
-        var CNat:multiset<nat> := MultisetIntToNat(CInt);
+        SumAbsGtSum(A);
+        var absSum := FSumNat(FMultisetAbs(A));
+
+        subconjuntoMenosElementos(A,CInt);
+        var CNat:multiset<nat> := FMultisetAdd(CInt,absSum) + repeat(absSum, |A|-|CInt|);
+
+        //assume GSumInt(FMultisetAdd(CInt,absSum)) == GSumInt(CInt) + |CInt|*absSum;
+
+        //assert repeat(absSum, |A|) <= SA;
+        assert repeat(absSum, |A|-|CInt|) <= CNat; 
+
+        // assert FMultisetAdd(A,absSum) <= 
+        assert FMultisetAdd(CInt,absSum) <= CNat;
+        assert  CInt <= A;
+        //assert FMultisetAdd(A,absSum) <= SA;
+        
         
         assume CNat <= SA && GSumNat(CNat) == SS;
     }
