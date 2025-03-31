@@ -9,13 +9,12 @@ ensures forall e | e in r :: e < 0 && -e in A
 //ensures forall e | e in A :: -e in r && r[-e] == A[e]
 ensures forall e | -e in A :: e in r && r[e] == A[-e]
 ensures |A| == |r|
-/*
 {
     if A == multiset{} then multiset{}
     else 
         var m :| m in A; 
         (multiset{-m} + GMultisetPosToNeg(A-multiset{m}))
-}*/
+}
 
 
 
@@ -25,23 +24,23 @@ ensures forall e | e in r :: e > 0 && -e in A
 ensures forall e | -e in A :: e in r && r[e] == A[-e]
 //ensures forall e | e in A :: -e in r && r[-e] == A[e]//esto se queda colgado
 ensures |A| == |r|
-/*
+
 {
     if A == multiset{} then multiset{}
     else 
         var m :| m in A; 
         (multiset{-m} + GMultisetNegToPos(A-multiset{m}))
-}*/
+}
 
 function FMultisetNegToPos(A:multiset<int>) : (r:(multiset<int>)) 
 requires forall e | e in A :: e < 0
 ensures r == GMultisetNegToPos(A)
-{
+/*{
     if A == multiset{} then multiset{}
     else 
         var min := minInt(A);
         (multiset{-min} + FMultisetNegToPos(A-multiset{min}))
-}
+}*/
 
 
 
@@ -169,7 +168,7 @@ ensures GMultisetNegToPos(GMultisetPosToNeg(A)) == A
 {}
 
 // Nuevo 
-lemma  NegSumGMultisetNegToPos(A:multiset<int>)
+lemma {:only} NegSumGMultisetNegToPos(A:multiset<int>)
 requires forall e | e in A :: e < 0
 ensures GSumNat(GMultisetNegToPos(A)) == - GSumInt(A)
 {
@@ -178,19 +177,27 @@ ensures GSumNat(GMultisetNegToPos(A)) == - GSumInt(A)
     }
     else {
         var i :| i in A;
-        NegSumGMultisetNegToPos(A-multiset{i});
+        assert A == (A - multiset{i}) + multiset{i};
         calc {
             - GSumInt(A);
             {GSumIntPartes(A,A-multiset{i},multiset{i});}
             - i - GSumInt(A-multiset{i});
+            {NegSumGMultisetNegToPos(A-multiset{i});}
+            - i + GSumNat(GMultisetNegToPos(A - multiset{i}));
+            {GMultisetNegToPosUnion(A-multiset{i},multiset{i});
+             assert GMultisetNegToPos(A) == GMultisetNegToPos(A-multiset{i})+GMultisetNegToPos(multiset{i});
+             assert GMultisetNegToPos(multiset{i}) == multiset{-i};
+             assert GSumNat(GMultisetNegToPos(multiset{i})) == GSumNat(multiset{-i}) == -i;
+            }
+            
         }
-
-        calc {
+        assume false;
+       /* calc {
             GSumNat(GMultisetNegToPos(A));
             {assume GMultisetNegToPos(A) == multiset{-i} + GMultisetNegToPos(A-multiset{i});
             GSumNatPartes(GMultisetNegToPos(A),multiset{-i},GMultisetNegToPos(A-multiset{i}));}
             - i + GSumNat(GMultisetNegToPos(A-multiset{i}));
-        }
+        }*/
 
         assert GSumNat(GMultisetNegToPos(A)) == - GSumInt(A);
         
