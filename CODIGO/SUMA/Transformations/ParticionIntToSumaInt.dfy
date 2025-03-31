@@ -34,10 +34,10 @@ lemma ParticionInt_Suma1(A:multiset<int>)
     if (SumaInt(SA,SS)) {
         assert FSumInt(A) % 2 != 1 by{
             //reveal GSumInt();
-            assume FSumInt(A) % 2 == 1;
-            assert (SA,SS) == (multiset{},10);
-            NotSumaInt();
-            assert false;
+           if( FSumInt(A) % 2 == 1)
+            {assert (SA,SS) == (multiset{},10);
+             NotSumaInt();
+             assert false;}
         }
         FSumIntComputaGSumInt(A); 
 
