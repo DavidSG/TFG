@@ -17,12 +17,6 @@ ghost predicate Envasar(A:multiset<nat>, E:nat, k:nat)
 }
 
 
-function minMultiset (m:multiset<multiset<nat>>): (l:multiset<nat>)
-requires m != multiset{}
-ensures l in m && (forall x | x in m :: GSumNat(l) <= GSumNat(l)) 
-
-
-
 method pick<T>(S:multiset<T>) returns (r:T)
   requires S != multiset{} //&& |S| > 0
   ensures r in S
