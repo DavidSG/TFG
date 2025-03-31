@@ -1,4 +1,6 @@
 include "../Auxiliar/Sum.dfy"
+include "../Auxiliar/MultisetFacts.dfy"
+
 
 // DEFINICION DEL PROBLEMA ENVASAR
 
@@ -18,19 +20,6 @@ ghost predicate Envasar(A:multiset<nat>, E:nat, k:nat)
 function minMultiset (m:multiset<multiset<nat>>): (l:multiset<nat>)
 requires m != multiset{}
 ensures l in m && (forall x | x in m :: GSumNat(l) <= GSumNat(l)) 
-
-// UNION
-
-ghost function Union (I:multiset<multiset<nat>>) : multiset<nat>
-{
-  if I == multiset{} then multiset{}
-  else var i :| i in I; i + Union(I-multiset{i})
-}
-
-
-lemma {:induction m} UnionPartes(m : multiset<multiset<nat>>, x : multiset<nat>)
-requires x in m
-ensures Union(m) == x + Union(m - multiset{x})
 
 
 
@@ -70,7 +59,7 @@ ensures b ==  (|I| <= k
     b1 := b1 && e1 <= A && FSumNat(e1) <= E;
     
     union := union + e1;
-    UnionPartes(I-envases,e1);
+    UnionOne(I-envases,e1);
   }
   assert b1 == forall e | e in I :: (e <= A && GSumNat(e) <= E);
   assert b1 ==> envases == multiset{} && I-envases == I && union == Union(I);
