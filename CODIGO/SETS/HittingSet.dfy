@@ -20,6 +20,7 @@ method pick<T>(S:set<T>) returns (r:T)
 }
 
 method checkHittingSet<T>(universe:set<T>, sets:set<set<T>>, k:nat, I:set<T>) returns (b:bool)
+  requires forall s | s in sets :: s <= universe
   ensures b == (I <= universe && hitsSets(sets,I) && |I| >= k)
 {
   var s := sets;
