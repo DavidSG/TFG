@@ -26,7 +26,7 @@ method pick<T>(S:multiset<T>) returns (r:T)
 }
 
 // VERIFICACION
-method {:verify true} checkEnvasar(A:multiset<nat>, E:nat, k:nat, I:multiset<multiset<nat>>) returns (b:bool)
+method checkEnvasar(A:multiset<nat>, E:nat, k:nat, I:multiset<multiset<nat>>) returns (b:bool)
 ensures b ==  (|I| <= k 
              && Union(I) == A 
              && forall e | e in I :: (e <= A && GSumNat(e) <= E))

@@ -10,7 +10,7 @@ ghost predicate SumaNat(A:multiset<nat>, S:nat)
   exists I:multiset<nat> | I <= A :: GSumNat(I) == S
 }
 
-method {:verify true} checkSumaNat(A:multiset<nat>, S:nat, I:multiset<nat>) returns (b:bool)
+method checkSumaNat(A:multiset<nat>, S:nat, I:multiset<nat>) returns (b:bool)
 ensures b == (I <= A && GSumNat(I) == S)
 { 
   var suma := mSumaNat(I);

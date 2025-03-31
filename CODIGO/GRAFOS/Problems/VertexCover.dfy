@@ -14,7 +14,7 @@ requires s <= graph.0
 }
 
 
-method {:verify true} checkVertexCover (graph:Graph, k:int, I:set<Node>) returns (b:bool)
+method checkVertexCover (graph:Graph, k:int, I:set<Node>) returns (b:bool)
   requires isValidGraph(graph)
   ensures b == (I <= graph.0 && isVertexCover(I,graph) && |I| >= k)
 {
