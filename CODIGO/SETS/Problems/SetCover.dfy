@@ -1,3 +1,5 @@
+include "../Auxiliar/SetFacts.dfy"
+
 //DEFINICION DEL PROBLEMA SET COVER
 
 ghost predicate SetCover<T>(U:set<T>, S: set<set<T>>, k:nat)
@@ -12,13 +14,7 @@ ghost predicate isCover<T>(universe:set<T>, sets:set<set<T>>)
   forall u | u in universe :: (exists s | s in sets :: u in s)
 }
 
-method pick<T>(S:set<T>) returns (r:T)
-  requires S != {} //&& |S| > 0
-  ensures r in S
-{
-  var v :| v in S;
-  return v;
-}
+
 
 method verifyIsCover<T>(universe:set<T>, sets:set<set<T>>, k:nat, I:set<set<T>>) returns (b:bool)   
 requires forall s | s in sets :: s <= universe

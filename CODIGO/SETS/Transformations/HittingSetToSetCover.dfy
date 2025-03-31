@@ -1,5 +1,5 @@
-include "SetCover.dfy"
-include "HittingSet.dfy"
+include "../Problems/SetCover.dfy"
+include "../Problems/HittingSet.dfy"
 
 lemma tisCover<T>(U: set<T>, S: set<set<T>>) 
 requires forall s | s in S :: s <= U

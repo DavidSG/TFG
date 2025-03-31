@@ -1,6 +1,6 @@
 
-include "SetCover.dfy"
-include "HittingSet.dfy"
+include "../Problems/SetCover.dfy"
+include "../Problems/HittingSet.dfy"
 
 //TRANSFORMACION DE SET COVER A HITTING SET
 // EJEMPLO: U = {1,2,3,4,5}, S= {{1,2,3}, {4,5}, {3,4}, {}}, K=3

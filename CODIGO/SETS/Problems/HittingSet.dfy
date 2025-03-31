@@ -1,3 +1,4 @@
+include "../Auxiliar/SetFacts.dfy"
 // DEFINICION DEL PROBLEMA HITTING SET
 
 ghost predicate HittingSet<T>(universe:set<T>, sets:set<set<T>>, cardinality:nat)
@@ -9,14 +10,6 @@ ghost predicate HittingSet<T>(universe:set<T>, sets:set<set<T>>, cardinality:nat
 ghost predicate hitsSets<T>(sets:set<set<T>>, s:set<T>)
 {
   forall s1 | s1 in sets :: s * s1 != {}
-}
-
-method pick<T>(S:set<T>) returns (r:T)
-  requires S != {} //&& |S| > 0
-  ensures r in S
-{
-  var v :| v in S;
-  return v;
 }
 
 method checkHittingSet<T>(universe:set<T>, sets:set<set<T>>, k:nat, I:set<T>) returns (b:bool)
