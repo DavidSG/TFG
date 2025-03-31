@@ -46,5 +46,17 @@ lemma SumaInt_SumaNat2(A:multiset<int>, S:int)
         var (SA, SS) := SumaInt_to_SumaNat(A, S);
         var CInt:multiset<int> :| CInt <= A && GSumInt(CInt) == S;
 
+        SumaInt_ParticionInt2(A,S);
+        var A1 := SumaInt_to_ParticionInt(A,S); // Se añade N
+        assert SumaInt(A,S) ==> ParticionInt(A1);
+
+        ParticionInt_ParticionNat2(A1);
+        var A2 := ParticionInt_to_ParticionNat(A1); // Abs(valores negativos)
+        assert ParticionInt(A1) ==> ParticionNat(A2);
+
+        ParticionNat_Suma2(A2);
+        var (A3, S3) := ParticionNat_to_SumaNat(A2);
+        assert ParticionNat(A2) ==> SumaNat(A3,S3);
+
     }
 }
