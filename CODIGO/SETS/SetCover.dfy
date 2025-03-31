@@ -26,11 +26,15 @@ ensures b == (I <= sets && isCover(universe, I) && |I| <= k)
 {
   var u := universe;
   var b1:= true;
+
   while (u != {} && b1)
   invariant u <= universe 
-  invariant b1 == isCover(universe-u,I)//forall u1 | u1 in universe - u :: (exists s | s in I :: u1 in s)
+  invariant b1 == isCover(universe-u,I)
   {
+   ghost var oldu := u;
    var e1 := pick(u); 
+   u := u - {e1};  
+
    var s := I; var b2:= false;
    while (s != {} && !b2)
      invariant s <= I
@@ -41,9 +45,8 @@ ensures b == (I <= sets && isCover(universe, I) && |I| <= k)
       s:= s-{e2};
    }
    b1 := b1 && b2;
-   u := u - {e1};  
+   assert universe - u == universe - oldu + {e1}; 
   }
-   
-  assert b1 == forall u1 | u1 in universe - u :: (exists s | s in I :: u1 in s);
-  b := I <= sets && |I| <= k && b1;
+  assert b1 ==> u == {} &&  universe-u == universe;
+  b := b1 && I <= sets && |I| <= k ;
 }
