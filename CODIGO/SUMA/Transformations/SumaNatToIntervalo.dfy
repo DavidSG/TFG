@@ -26,10 +26,10 @@ lemma SumaNat_Intervalo1(A:multiset<nat>, S:nat)
     // IT: límite superior del intervalo
 
     if (Intervalo(IE,IS,IT)) {
-        // Se selecciona un subconjunto C que cumpla Intervalo(IE,IS,IT)
+        // Se selecciona un subconjunto C que resuelva Intervalo(IE,IS,IT)
         var C:multiset<int> :| C <= IE && IS <= GSumNat(C) < IT; // C = 2, 4  ->  Sum(C) = 6
 
-        // C cumple SumaNat(A,S)
+        // C también resuelve SumaNat(A,S)
         assert GSumNat(C) == S; // Sum(C) == 6
     }
 }
@@ -45,10 +45,10 @@ lemma SumaNat_Intervalo2(A:multiset<nat>, S:nat)
         // IS: límite inferior del intervalo
         // IT: límite superior del intervalo
 
-        // Se selecciona un subconjunto C que cumpla Suma(A,S)
+        // Se selecciona un subconjunto C que resuelva Suma(A,S)
         var C:multiset<int> :| C <= A && GSumNat(C) == S; 
 
-        // Ese mismo subconjunto cumple Intervalo(IE,IS,IT)
+        // Ese mismo subconjunto resuelve Intervalo(IE,IS,IT)
         assert S == IS <= GSumNat(C) < IT == S+1; 
     }
 }
