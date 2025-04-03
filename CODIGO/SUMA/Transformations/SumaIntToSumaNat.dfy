@@ -32,11 +32,14 @@ lemma SumaInt_SumaNat1(A:multiset<int>, S:int)
 {   
     var (SA, SS) := SumaInt_to_SumaNat(A, S);
     if (SumaNat(SA,SS)) {
-        var CNat:multiset<nat> :| CNat <= SA && GSumNat(CNat) == SS;
 
-        var A1 := SumaInt_to_ParticionInt(A,S); // Se añade N
-        var A2 := ParticionInt_to_ParticionNat(A1); // Abs(valores negativos)
+        // A El conjunto para el que queremos encontrar una solución a Suma(A,S)
+        var A1 := SumaInt_to_ParticionInt(A,S); // A1 es la entrada para el problema equivalente ParticionInt(A1)
+        var A2 := ParticionInt_to_ParticionNat(A1); // A2 es la entrada para el problema equivalente ParticionNat(A2)
+        // SA, SS es la entrada para el problema equivalente de SumaNat(SA, SS)
 
+        // Empleando los lemas de otros problemas justificamos que exista una solución a SumaInt(A,S)
+        // Si existe una para sumaNat
         ParticionNat_Suma1(A2);
         assert ParticionNat(A2) <== SumaNat(SA,SS);
 
@@ -55,11 +58,14 @@ lemma SumaInt_SumaNat2(A:multiset<int>, S:int)
 
     if (SumaInt(A,S)) {
         var (SA, SS) := SumaInt_to_SumaNat(A, S);
-        var CInt:multiset<int> :| CInt <= A && GSumInt(CInt) == S;
 
-        var A1 := SumaInt_to_ParticionInt(A,S); // Se añade N
-        var A2 := ParticionInt_to_ParticionNat(A1); // Abs(valores negativos)
+        // A El conjunto para el que queremos encontrar una solución a Suma(A,S)
+        var A1 := SumaInt_to_ParticionInt(A,S); // A1 es la entrada para el problema equivalente ParticionInt(A1)
+        var A2 := ParticionInt_to_ParticionNat(A1); // A2 es la entrada para el problema equivalente ParticionNat(A2)
+        // SA, SS es la entrada para el problema equivalente de SumaNat(SA, SS)
 
+        // Empleando los lemas de otros problemas justificamos que exista una solución a SumaNat(SA,SS)
+        // Si existe una para SumaInt
         SumaInt_ParticionInt2(A,S);
         assert SumaInt(A,S) ==> ParticionInt(A1);
 
