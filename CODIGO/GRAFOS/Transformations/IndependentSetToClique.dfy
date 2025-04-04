@@ -25,13 +25,17 @@ lemma IndependentSet_Clique1(graph:Graph, k:int)
 {   
     var (Vgraph,Vk) := IndependentSet_to_Clique(graph,k);
     if (Clique(Vgraph,Vk)) {
+        // Encontramos una solución para Clique(Vgraph,Vk)
         var clique:set<Node> :| clique <= Vgraph.0 && isClique(clique,Vgraph) && |clique| >= Vk;
 
+        // IndepSet será nuestra solución a IndependentSet(graph,k)
         var IndepSet:set<Node> := clique;
 
-        // Demostracion: isIndependentSet(IndepSet,graph)
+        // Empleamos la siguiente definición alternativa para Independent Set
         auxIndependentSet (IndepSet, graph); 
+        assert forall u,v | u in IndepSet && v in IndepSet && u != v :: {u,v} !in graph.1;
         
+        // Demostramos que IndepSet es un conjunto independiente en el grafo original
         assert IndepSet <= graph.0 && isIndependentSet(IndepSet,graph) && |IndepSet| >= k;
     }
 }
@@ -43,13 +47,18 @@ lemma IndependentSet_Clique2(graph:Graph, k:int)
 {
     if (IndependentSet(graph,k)) {
         var (Vgraph,Vk) := IndependentSet_to_Clique(graph,k);
+
+        // Encontramos una solución para IndependentSet(graph,k)
         var IndepSet:set<Node> :| IndepSet <= graph.0 && isIndependentSet(IndepSet,graph) && |IndepSet| >= k;
 
+        // clique será nuestra solución a Clique(Vgraph,Vk)
         var clique:set<Node> := IndepSet;
 
-        // Demostracion: isClique(clique,Vgraph)
+        // Empleamos la siguiente definición alternativa para Independent Set
         auxIndependentSet(IndepSet, graph); 
+        assert forall u,v | u in IndepSet && v in IndepSet && u != v :: {u,v} !in graph.1;
 
+        // Demostramos que clique es un clique en el grafo Vgraph
         assert clique <= Vgraph.0 && isClique(clique,Vgraph) && |clique| >= Vk;
     }
 }
