@@ -59,7 +59,7 @@ lemma VertexCover_SetCover1(graph:Graph, k:int)
     ensures var (U,S,k'):= VertexCover_to_SetCover(graph,k);
         VertexCover(graph,k) ==> SetCover(U,S,k')
 { var (U,S,k'):= VertexCover_to_SetCover(graph,k);
-    if (VertexCover(graph,k)){
+  if (VertexCover(graph,k)){
     var s:set<Node> :|  s <= graph.0 && isVertexCover(s,graph) && |s| <= k  ;
     var sc := set v | v in s :: edges(graph,v);
     cardinal_of_set(graph,s);
@@ -71,6 +71,7 @@ lemma VertexCover_SetCover1(graph:Graph, k:int)
         if (u in s) { assert e in edges(graph,u) && edges(graph,u) in sc;}
         else {assert e in edges(graph,v) && edges(graph,v) in sc;}
     }
+    assert SetCover(U,S,k');
 }
 
 }
