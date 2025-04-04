@@ -17,16 +17,22 @@ method checkClique(graph:Graph, k:int, I:set<Node>) returns (b:bool)
   requires isValidGraph(graph)
   ensures b == (I <= graph.0 && isClique(I,graph) && |I| >= k)
 {
+  // Con el primer bucle iteramos todos los elementos u de I1
   var I1 := I;
   var b1:= true;
   while (I1 != {} && b1)
   invariant I1 <= I 
+  // Todos los elementos u explorados hasta el momento cumplen que todas las parejas 
+  // {u,v}, donde v es otro elemento de I, son aristas del grafo (y por tanto forman un clique)
   invariant b1 == forall u,v | u in I-I1 && v in I && u != v ::{u,v} in graph.1
   {
+    // En el segundo bucle iteramos todos los elementos v
    var e1 := pick(I1); 
    var I2:= I; var b2:= true;
    while (I2 != {} && b2)
     invariant I2 <= I 
+    // Todos los elementos v explorados hasta el momento cumplen que todas las parejas 
+    // {e1,v}, donde e1 es el elemento seleccionado de I1, son aristas del grafo (y por tanto forman un clique)
      invariant b2 == forall v | v in I-I2 && e1 != v ::{e1,v} in graph.1
    { 
      var e2 := pick(I2); 
