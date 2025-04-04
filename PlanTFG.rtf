@@ -9,7 +9,7 @@
 \
 1-INTRODUCCION \
 \
-2-DAFNY\
+2-El lenguaje Dafny\
 -Especificacion: predicados l\'f3gicos, funciones ghost, especificaci\'f3n pre/post \
 -Implementacion: m\'e9todos, funciones\
 -Verificacion\
@@ -19,12 +19,10 @@
 -Lemmas, demostraciones: reducci\'f3n al absurdo, calculations, inducci\'f3n (n\'fameros y conjuntos/multiconjuntos), demostraciones forall, demostraciones de existencia requieren testigos\
 \
 \
-3 - PRELIMINARES NP-completitud\
+3 - Preliminares de NP-completitud\
 -PROBLEMAS NP  \
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-\cf0 -REDUCIBILIDAD POLINOMICA\
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-\cf0 -NP-COMPLETITUD\
+-REDUCIBILIDAD POLINOMICA\
+-NP-COMPLETITUD\
 \
 Dar un ejemplo de reducci\'f3n entre problemas. \
 \
@@ -33,14 +31,51 @@ Dar un ejemplo de reducci\'f3n entre problemas. \
 \
 -Decisiones tomadas a la hora de formalizar los problemas y de escribir los algoritmos de verificaci\'f3n polinomicos y poner un ejemplo\
 \
--Problemas de conjuntos\
--Problemas de n\'fameros\
--Problemas de grafos\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 4.1-Problemas de grafos\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+4.2 -Problemas de conjuntos \
+\
+4.3 -Problemas de n\'fameros Hablar de las versiones natural y entera de Suma y Particion\
+\
 \
 \
 \
 5-REDUCCIONES POLINOMICAS ENTRE PROBLEMAS EN DAFNY\
 -Explicar las distintas reducciones y demostraciones \
+\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 5.1-Problemas de grafos\
+\
+Explicar parte de las transformaciones: \
+\
+vC <- Clique <- IS <-  VC \
+\
+\
+\
+5.2 -Problemas de conjuntos de SC a HS\
+\
+\
+\
+\
+5.3 -Problemas de n\'fameros Hablar de las versiones natural y entera de Suma y Particion\
+\
+-De Suma Nat a Intervalo\
+-De Suma Nat a Suma Int: ejemplo de transformaci\'f3n de un caso particular a uno general\
+-De Particion Nat a Intercalar\
+-De Particion Nat a Envasar\
+\
+\
+-De Suma Int a Partici\'f3n Int \
+-De Particion Int a Particion Nat\
+-De Particion Nat a Suma Nat\
+-Como combinacion de transformaciones tenemos SumaInt a Suma Nat\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
 \
 6- Conclusiones y trabajo futuro\
 \
