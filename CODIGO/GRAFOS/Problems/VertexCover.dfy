@@ -17,11 +17,14 @@ requires s <= graph.0
 method checkVertexCover (graph:Graph, k:int, I:set<Node>) returns (b:bool)
   requires isValidGraph(graph)
   ensures b == (I <= graph.0 && isVertexCover(I,graph) && |I| >= k)
-{
+{ 
+  // Iteramos todas las aristas e1 de E para comprobar que al menos uno de los vértices
+  // de e1 pertenecen a I
   var edges := graph.1;
   var b1:= true;
   while (edges != {} && b1)
   invariant edges <= graph.1
+  // En todos las aristas visitadas al menos un vértice pertenece a I
   invariant b1 == forall e | e in graph.1 - edges :: |I * e| > 0
   {
     var e1 := pick(edges); 

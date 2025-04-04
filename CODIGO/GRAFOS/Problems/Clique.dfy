@@ -17,6 +17,8 @@ method checkClique(graph:Graph, k:int, I:set<Node>) returns (b:bool)
   requires isValidGraph(graph)
   ensures b == (I <= graph.0 && isClique(I,graph) && |I| >= k)
 {
+  // El objetivo es comprobar todas las parejas {u,v} de I (u != v) para ver si son aristas de E
+
   // Con el primer bucle iteramos todos los elementos u de I1
   var I1 := I;
   var b1:= true;
