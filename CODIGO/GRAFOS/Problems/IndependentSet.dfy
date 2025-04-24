@@ -52,7 +52,7 @@ lemma auxIndependentSet2 (IndepSet:set<Node>, graph:Graph)
   
 }
 
-method {:verify true} checkIndependentSet (graph:Graph, k:int, I:set<Node>) returns (b:bool)
+method checkIndependentSet (graph:Graph, k:int, I:set<Node>) returns (b:bool)
   requires isValidGraph(graph)
   ensures b == (I <= graph.0 && |I| >= k &&isIndependentSet(I,graph))
 {

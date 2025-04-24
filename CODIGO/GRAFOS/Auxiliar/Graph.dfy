@@ -1,3 +1,6 @@
+include "../../SETS/Auxiliar/SetFacts.dfy"
+
+
 type Node = nat
 type Edge = set<Node>
 
@@ -11,14 +14,6 @@ ensures isValidGraph(r)
     var allEdges:set<Edge> := (set n1,n2 | n1 in graph.0 && n2 in graph.0 && n1 != n2 :: {n1,n2});
     var complementGraph:Graph := (graph.0, allEdges-graph.1);
     (complementGraph)
-}
-
-method pick<T>(S:set<T>) returns (r:T)
-  requires S != {} //&& |S| > 0
-  ensures r in S
-{
-  var v :| v in S;
-  return v;
 }
 
 
