@@ -26,7 +26,7 @@ lemma Clique_IndependentSet1(graph:Graph, k:int)
     var (Vgraph,Vk) := Clique_to_IndependentSet(graph,k);
     if (IndependentSet(Vgraph,Vk)) {
         // Encontramos una solucion para IndependentSet(Vgraph,Vk)
-        var IndepSet:set<Node> :| IndepSet <= Vgraph.0 && isIndependentSet(IndepSet,Vgraph) && |IndepSet| >= Vk;
+        var IndepSet:set<Node> :| IndepSet <= Vgraph.0 && |IndepSet| >= Vk && isIndependentSet(IndepSet,Vgraph);
         
         // Clique será nuestra solución a Clique(graph,k)
         var clique:set<Node> := IndepSet;
@@ -50,7 +50,7 @@ lemma Clique_IndependentSet2(graph:Graph, k:int)
         var (Vgraph,Vk) := Clique_to_IndependentSet(graph,k);
 
         // Encontramos una solución para Clique(graph,k)
-        var clique:set<Node> :| clique <= graph.0 && isClique(clique,graph) && |clique| >= k;
+        var clique:set<Node> :| clique <= graph.0  && |clique| >= k && isClique(clique,graph);
 
         // IndepSet será nuestra solución a IndependentSet(Vgraph,Vk)
         var IndepSet:set<Node> := clique;

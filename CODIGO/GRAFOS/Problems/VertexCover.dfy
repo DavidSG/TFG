@@ -3,20 +3,20 @@ include "../Auxiliar/Graph.dfy"
 ghost predicate VertexCover(graph:Graph, k:int)
 requires isValidGraph(graph)
 {
-  exists s:set<Node> :: s <= graph.0 && isVertexCover(s,graph) && |s| <= k  
+  exists I:set<Node> | I <= graph.0 && |I| <= k  :: isVertexCover(I,graph)  
 }
 
-ghost predicate isVertexCover(s:set<Node>, graph:Graph)
+ghost predicate isVertexCover(I:set<Node>, graph:Graph)
 requires isValidGraph(graph)
-requires s <= graph.0
+requires I <= graph.0
 {
-  forall e | e in graph.1 :: |s * e| > 0
+  forall e | e in graph.1 :: |I * e| > 0
 }
 
 
 method checkVertexCover (graph:Graph, k:int, I:set<Node>) returns (b:bool)
   requires isValidGraph(graph)
-  ensures b == (I <= graph.0 && isVertexCover(I,graph) && |I| >= k)
+  ensures b == (I <= graph.0 && |I| >= k && isVertexCover(I,graph))
 { 
   // Iteramos todas las aristas e1 de E para comprobar que al menos uno de los vértices
   // de e1 pertenecen a I

@@ -12,12 +12,12 @@ ghost predicate Intercalar(E:seq<nat>)
   if (|E| == 0) then true
   else
    var elements:multiset<nat> := multiset(E);
-   exists E1,E2 :: 
+   exists E1,E2 | 
      E[0] in E1 
      && E1 <= elements     //E1 positive elements
-     && E2 <= elements                //E2 negative elements
-     && E1 + E2 == elements
-     && GSumNat(E1) - GSumNat(E2) == 0
+     && E2 <= elements     //E2 negative elements
+     && E1 + E2 == elements ::
+     GSumNat(E1) - GSumNat(E2) == 0
 }
 
 method {:verify true} checkIntercalar(E:seq<nat>, E1:multiset<nat>, E2:multiset<nat>) returns (b:bool)

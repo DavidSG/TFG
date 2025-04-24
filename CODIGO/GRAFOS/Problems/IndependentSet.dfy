@@ -3,14 +3,14 @@ include "../Auxiliar/Graph.dfy"
 ghost predicate IndependentSet(graph:Graph, k:int)
   requires isValidGraph(graph)
 {
-  exists s:set<Node> :: s <= graph.0 && isIndependentSet(s,graph) && |s| >= k 
+  exists I:set<Node> | I <= graph.0 && |I| >= k :: isIndependentSet(I,graph) 
 }
 
-ghost predicate isIndependentSet(s:set<Node>, graph:Graph)
+ghost predicate isIndependentSet(I:set<Node>, graph:Graph)
 requires isValidGraph(graph)
-requires  s <= graph.0
+requires  I <= graph.0
 {
-  forall e | e in graph.1 :: |s * e| <= 1
+  forall e | e in graph.1 :: |I * e| <= 1
 }
 
 lemma auxIndependentSet (IndepSet:set<Node>, graph:Graph)
@@ -54,7 +54,7 @@ lemma auxIndependentSet2 (IndepSet:set<Node>, graph:Graph)
 
 method {:verify true} checkIndependentSet (graph:Graph, k:int, I:set<Node>) returns (b:bool)
   requires isValidGraph(graph)
-  ensures b == (I <= graph.0 && isIndependentSet(I,graph) && |I| >= k)
+  ensures b == (I <= graph.0 && |I| >= k &&isIndependentSet(I,graph))
 {
 
   // El objetivo es comprobar todas las parejas {u,v} de I (u != v) para ver si no son aristas de E

@@ -7,7 +7,7 @@ include "../Auxiliar/Sum.dfy"
 
 ghost predicate ParticionInt(A:multiset<int>)
 {
-  exists P1:multiset<int>, P2:multiset<int> :: P1 <= A && P2 <= A && P1 + P2 == A && GSumInt(P1) == GSumInt(P2)
+  exists P1:multiset<int>, P2:multiset<int> | P1 <= A && P2 <= A && P1 + P2 == A :: GSumInt(P1) == GSumInt(P2)
 }
 
 ghost predicate IsPartitionInt(A:multiset<int>,P1:multiset<int>,P2:multiset<int>)

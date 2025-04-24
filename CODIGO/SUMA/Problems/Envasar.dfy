@@ -9,10 +9,10 @@ include "../Auxiliar/MultisetFacts.dfy"
 // tales que la suma de los elementos de cada subconjunto sea a lo sumo E
 ghost predicate Envasar(A:multiset<nat>, E:nat, k:nat)
 { 
-  exists I:multiset<multiset<nat>> :: 
-   && |I| <= k 
-   && Union(I) == A
-   && forall e | e in I :: (e <= A && GSumNat(e) <= E)
+  exists I:multiset<multiset<nat>> | 
+   |I| <= k 
+   && Union(I) == A ::
+   (forall e | e in I :: (e <= A && GSumNat(e) <= E))
     
 }
 
