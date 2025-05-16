@@ -297,7 +297,7 @@ lemma ParticionInt_ParticionNat(A:multiset<int>)
 
 
 
-lemma {:verify false}ParticionInt_ParticionNat1(A:multiset<int>)
+lemma ParticionInt_ParticionNat1(A:multiset<int>)
     ensures var PA := ParticionInt_to_ParticionNat(A);
           ParticionInt(A) <== ParticionNat(PA)
 {   
