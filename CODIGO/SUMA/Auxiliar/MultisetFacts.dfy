@@ -102,7 +102,7 @@ ensures exists P1,P2 :: multiset{P1,P2} == C
 
 }
 
-lemma  Multiset1(C: multiset<multiset<nat>>)
+lemma   Multiset1(C: multiset<multiset<nat>>)
 requires |C| == 1
 ensures exists P1 :: multiset{P1} == C
 { var P1:multiset<nat> :| P1 in C; 

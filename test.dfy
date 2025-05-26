@@ -1,8 +1,32 @@
 lemma test ()
-ensures !exists x1 : real :: x1 > 0.0 && forall y : real :: (x1 < y)
+ensures !exists x : int :: 2 * x == 5
 {
-        assume exists x1 : real :: x1 > 0.0 && (forall y : real :: x1 < y);
-        var x1 : real :| x1 > 0.0 && (forall y : real :: x1 < y);
-        //assert exists x2 : real | x2 == x1 / 2.0 :: x2 > 0.0 && x1 < x2;
-        assume false;    
+        if (exists x : int :: 2 * x == 5) {
+                assert false;
+        }   
+}
+
+
+lemma EcuacionSinSentido ()
+ensures !exists x : int :: x + 3 == x
+{
+        if (exists x : int ::  x + 3 == x) {
+                assert 3 == 0;
+                assert false;
+        }   
+}
+
+lemma PropiedadSuma (n : nat)
+requires n >= 1
+ensures n < n + 1
+{
+        if (n == 1) {
+                assert 1 < 2;
+        }
+        else {
+                PropiedadSuma(n - 1);
+                assert n - 1 < n ;
+                assert n - 1 + 1 < n + 1;
+                assert n < n + 1;
+        }
 }

@@ -71,6 +71,7 @@ ghost function GSumNat(m: multiset<nat>) : nat
   else var x :| x in m; x + GSumNat(m - multiset{x})
 }
 
+
 lemma {:induction m} FSumNatComputaGSumNat(m : multiset<nat>)
 ensures FSumNat(m) == GSumNat(m)
 { //reveal GSumNat();
