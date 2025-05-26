@@ -98,8 +98,8 @@ lemma SetCover_HittingSet2<T>(U:set<T>, S: set<set<T>>, k:nat)
       //Este es un caso especial algo raro 
       //pero no lo he quitado en las precondiciones
       //Solo hay dos casos S={} o S={{}}
-        if (S == {}) {}
-        else if (S == {{}}) { 
+        //if (S == {}) {}
+      if (S == {} || S == {{}}) { 
               var C := {};
               assert C <= U && |C| <= Hk;
               assert HittingSet(HU,HS,Hk);}
@@ -115,10 +115,7 @@ lemma SetCover_HittingSet2<T>(U:set<T>, S: set<set<T>>, k:nat)
       if (SetCover(U,S,k)) {
        var C:set<set<T>> :| C <= S && isCover(U, C) && |C| <= k;
        assert C <= HU && |C| <= Hk by
-           {assert C!={};
-            var s :| s in S && s !={};
-            assert s in S-{{}};
-            assert S-{{}}!={};}
+           {assert C <= S && |C| <= k;}
       // Tenemos que demostrar que el mismo C es Hitting set
       // Por ser C cobertura sabemos que cada elemento de U
       // corresponde a un conjunto de newS cuyos conjuntos contienen a u
